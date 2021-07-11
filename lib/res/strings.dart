@@ -33,7 +33,7 @@ class Strings {
   final String settingsPageTitle = '設定';
   final String settingsNotLoginEmailLabel = '未ログイン';
   final String settingsNotLoginNameLabel = 'ー';
-  final String settingsLoginInfo = '※Googleアカウントでログインできます。ログインすると各データの登録/編集が可能になります。';
+  final String settingsLoginInfo = '※Googleアカウントでログインできます。ログインするとデータのバックアップが可能になります。';
   final String settingsLoginNameNotSettingLabel = '未設定';
   final String settingsLoginEmailNotSettingLabel = '未設定';
   final String settingsLoginWithGoogle = 'ログイン';

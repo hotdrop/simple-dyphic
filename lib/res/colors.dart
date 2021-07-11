@@ -7,6 +7,7 @@ class AppColors {
     required this.primaryColorDark,
     required this.accentColorDark,
     required this.statusBarColor,
+    required this.selectCalender,
     required this.mealBreakFast,
     required this.mealLunch,
     required this.mealDinner,
@@ -17,11 +18,12 @@ class AppColors {
 
   factory AppColors.init() {
     return AppColors._(
-      primaryColor: Color(0xFFF48FB1),
-      accentColor: Colors.pinkAccent,
-      primaryColorDark: Color(0xFFC2185B),
-      accentColorDark: Color(0xFFF06292),
-      statusBarColor: Color(0xFFC2185B),
+      primaryColor: Colors.lightBlue,
+      accentColor: Colors.blueAccent,
+      primaryColorDark: Color(0xFF0000FF),
+      accentColorDark: Color(0xFF3333FF),
+      statusBarColor: Color(0xFF0D0D0D),
+      selectCalender: Color(0xFF66CCFF),
       mealBreakFast: Color(0xFFFA6B72),
       mealLunch: Color(0xFFFCA41F),
       mealDinner: Color(0xFF3D2EAD),
@@ -35,7 +37,9 @@ class AppColors {
   final Color primaryColorDark;
   final Color accentColor;
   final Color accentColorDark;
+
   final Color statusBarColor;
+  final Color selectCalender;
 
   final Color mealBreakFast;
   final Color mealLunch;

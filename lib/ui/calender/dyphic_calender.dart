@@ -75,7 +75,7 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
       eventLoader: _getRecordForDay,
       calendarStyle: CalendarStyle(
         selectedDecoration: BoxDecoration(
-          color: Colors.deepOrange.withAlpha(70),
+          color: R.res.colors.selectCalender,
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
@@ -149,7 +149,7 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
   Widget _cardDailyRecord(BuildContext context) {
     return Expanded(
       child: Card(
-        margin: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         elevation: 4.0,
         child: InkWell(
           onTap: () async {
@@ -163,14 +163,17 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
   }
 
   Widget _detailDailyRecord(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _labelRecordInfo(),
-          ],
+    return Container(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _labelRecordInfo(),
+            ],
+          ),
         ),
       ),
     );

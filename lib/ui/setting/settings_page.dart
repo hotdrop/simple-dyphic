@@ -59,7 +59,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowAccountInfo(BuildContext context) {
     final viewModel = context.read(settingsViewModelProvider);
     return ListTile(
-      leading: Icon(Icons.account_circle, size: 30),
+      leading: Icon(Icons.account_circle, size: 50),
       title: Text(viewModel.getLoginEmail(), style: TextStyle(fontSize: 12.0)),
       subtitle: Text(viewModel.getLoginUserName()),
       trailing: (viewModel.loggedIn) ? _logoutButton(context) : _loginButton(context),
