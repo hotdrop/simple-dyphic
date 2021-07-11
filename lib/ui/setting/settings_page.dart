@@ -59,7 +59,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowAccountInfo(BuildContext context) {
     final viewModel = context.read(settingsViewModelProvider);
     return ListTile(
-      leading: Icon(Icons.account_circle, size: 50),
+      leading: Icon(Icons.account_circle, size: R.res.integers.settingsPageAccountIconSize),
       title: Text(viewModel.getLoginEmail(), style: TextStyle(fontSize: 12.0)),
       subtitle: Text(viewModel.getLoginUserName()),
       trailing: (viewModel.loggedIn) ? _logoutButton(context) : _loginButton(context),
@@ -69,7 +69,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowSwitchTheme(BuildContext context) {
     final appSettings = context.read(appSettingsProvider)!;
     return ListTile(
-      leading: AppIcon.changeTheme(appSettings.isDarkMode, size: 30),
+      leading: ChangeThemeIcon(appSettings.isDarkMode),
       title: Text(R.res.strings.settingsChangeAppThemeLabel),
       trailing: Switch(
         onChanged: (isDark) => context.read(appSettingsProvider.notifier).saveThemeMode(isDark),
@@ -81,7 +81,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowAppVersion(BuildContext context) {
     final appVersion = context.read(settingsViewModelProvider).appVersion;
     return ListTile(
-      leading: Icon(Icons.info, size: 30),
+      leading: Icon(Icons.info, size: R.res.integers.settingsPageIconSize),
       title: Text(R.res.strings.settingsAppVersionLabel),
       trailing: Text(appVersion),
     );

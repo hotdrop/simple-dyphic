@@ -1,16 +1,22 @@
 class Integers {
   Integers._({
     required this.calendarIconSize,
-    required this.completeStepNum,
+    required this.recordPageIconSize,
+    required this.settingsPageIconSize,
+    required this.settingsPageAccountIconSize,
   });
 
   factory Integers.init() {
     return Integers._(
       calendarIconSize: 15,
-      completeStepNum: 5000,
+      recordPageIconSize: 40,
+      settingsPageIconSize: 30,
+      settingsPageAccountIconSize: 50,
     );
   }
 
   final double calendarIconSize;
-  final int completeStepNum;
+  final double recordPageIconSize;
+  final double settingsPageIconSize;
+  final double settingsPageAccountIconSize;
 }

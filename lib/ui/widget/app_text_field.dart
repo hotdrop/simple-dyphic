@@ -66,7 +66,7 @@ class _MultiLineTextFieldState extends State<MultiLineTextField> {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.initValue.toString();
+    _controller.text = widget.initValue?.toString() ?? '';
   }
 
   @override

@@ -45,8 +45,8 @@ class _RecordViewModel extends BaseViewModel {
     _isUpdate = true;
   }
 
-  void inputCondition(String newVal) {
-    _inputRecord.condition = newVal;
+  void selectCondition(ConditionType? type) {
+    _inputRecord.conditionType = type;
     _isUpdate = true;
   }
 
@@ -71,7 +71,7 @@ class InputRecord {
     required this.lunch,
     required this.dinner,
     required this.isWalking,
-    required this.condition,
+    required this.conditionType,
     required this.conditionMemo,
   });
 
@@ -83,7 +83,7 @@ class InputRecord {
       lunch: record.lunch ?? '',
       dinner: record.dinner ?? '',
       isWalking: record.isWalking ?? false,
-      condition: record.condition ?? '',
+      conditionType: Condition.toType(record.condition),
       conditionMemo: record.conditionMemo ?? '',
     );
   }
@@ -93,7 +93,7 @@ class InputRecord {
   String lunch;
   String dinner;
   bool isWalking;
-  String condition;
+  ConditionType? conditionType;
   String conditionMemo;
 
   Record toRecord() {
@@ -103,7 +103,7 @@ class InputRecord {
       lunch: lunch,
       dinner: dinner,
       isWalking: isWalking,
-      condition: condition,
+      condition: Condition.toStr(conditionType),
       conditionMemo: conditionMemo,
     );
   }

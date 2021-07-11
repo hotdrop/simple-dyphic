@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/app_settings.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/calender/record/record_view_model.dart';
 import 'package:simple_dyphic/ui/calender/record/widget_meal_card.dart';
+import 'package:simple_dyphic/ui/widget/app_check_box.dart';
 import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_text_field.dart';
+import 'package:simple_dyphic/ui/widget/condition_radio_group.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage._(this._record);
@@ -25,7 +27,6 @@ class RecordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headerTitle = DateFormat(R.res.strings.recordPageTitleDateFormat).format(_record.date);
     return WillPopScope(
       onWillPop: () async {
         final isUpdate = context.read(recordViewModelProvider).isUpdate;
@@ -36,12 +37,12 @@ class RecordPage extends StatelessWidget {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(headerTitle)),
+        appBar: AppBar(title: Text(_record.showFormatDate())),
         body: Consumer(
           builder: (context, watch, child) {
             final uiState = watch(recordViewModelProvider).uiState;
             return uiState.when(
-              loading: () => _onLoading(),
+              loading: () => _onLoading(context),
               success: () => _onSuccess(context),
               error: (err) => _onError(context, '$err'),
             );
@@ -51,7 +52,10 @@ class RecordPage extends StatelessWidget {
     );
   }
 
-  Widget _onLoading() {
+  Widget _onLoading(BuildContext context) {
+    Future<void>.delayed(Duration.zero).then((_) {
+      context.read(recordViewModelProvider).init(_record);
+    });
     return Center(
       child: const CircularProgressIndicator(),
     );
@@ -71,16 +75,19 @@ class RecordPage extends StatelessWidget {
       padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
       child: ListView(
         children: <Widget>[
-          _mealViewArea(context),
-          const SizedBox(height: 16.0),
-          _conditionViewArea(context),
-          const SizedBox(height: 16.0),
+          _viewMealArea(context),
+          const SizedBox(height: 16),
+          ..._viewCondition(context),
+          const SizedBox(height: 16),
+          _viewCheckBoxes(context),
+          _viewConditionMemo(context),
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  Widget _mealViewArea(BuildContext context) {
+  Widget _viewMealArea(BuildContext context) {
     final viewModel = context.read(recordViewModelProvider);
     return Column(
       children: [
@@ -120,52 +127,42 @@ class RecordPage extends StatelessWidget {
     );
   }
 
-  Widget _conditionViewArea(BuildContext context) {
-    final viewModel = context.read(recordViewModelProvider);
-    final isDarkMode = context.read(appSettingsProvider)!.isDarkMode;
-    return Card(
-      elevation: 4.0,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            _contentsTitle(
-              title: R.res.strings.recordConditionTitle,
-              icon: AppIcon.condition(isDarkMode),
-            ),
-            const Divider(),
-            // TODO 体調を顔によって3つ表示する
-            const Divider(),
-            Row(
-              children: [
-                Checkbox(
-                  value: _record.isWalking,
-                  onChanged: (bool? isCheck) => viewModel.inputIsWalking(isCheck),
-                ),
-                Text(R.res.strings.recordWalkingLabel),
-              ],
-            ),
-            MultiLineTextField(
-              label: R.res.strings.recordConditionMemoTitle,
-              initValue: _record.conditionMemo,
-              limitLine: 10,
-              hintText: R.res.strings.recordConditionMemoHint,
-              onChanged: viewModel.inputConditionMemo,
-            ),
-          ],
-        ),
+  List<Widget> _viewCondition(BuildContext context) {
+    return <Widget>[
+      Center(
+        child: Text(R.res.strings.recordConditionOverview),
       ),
+      Divider(),
+      ConditionRadioGroup(
+        initSelectValue: _record.getConditionType(),
+        onSelected: (newVal) => context.read(recordViewModelProvider).selectCondition(newVal),
+      ),
+    ];
+  }
+
+  Widget _viewCheckBoxes(BuildContext context) {
+    return Row(
+      children: [
+        AppCheckBox.walking(
+          initValue: _record.isWalking ?? false,
+          onChecked: (bool? isCheck) {
+            context.read(recordViewModelProvider).inputIsWalking(isCheck);
+          },
+        ),
+      ],
     );
   }
 
-  Widget _contentsTitle({required String title, required AppIcon icon}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        icon,
-        const SizedBox(width: 8),
-        Text(title),
-      ],
+  Widget _viewConditionMemo(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: MultiLineTextField(
+        label: R.res.strings.recordConditionMemoTitle,
+        initValue: _record.conditionMemo,
+        limitLine: 10,
+        hintText: R.res.strings.recordConditionMemoHint,
+        onChanged: context.read(recordViewModelProvider).inputConditionMemo,
+      ),
     );
   }
 }

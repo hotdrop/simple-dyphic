@@ -19,8 +19,9 @@ class Strings {
   final String recordDinnerDialogTitle = '夕食';
   final String recordMealDialogHint = '食事の内容(簡単に)';
 
-  final String recordConditionTitle = '体調';
+  final String recordConditionOverview = '今日の体調を選んでください。';
   final String recordWalkingLabel = '散歩した';
+  final String recordUncoLabel = '排便した';
   final String recordConditionMemoTitle = '体調メモ';
   final String recordConditionMemoHint = '細かい体調はこちらに記載しましょう！';
   final String recordConditionSaveButton = '体調情報を保存する';
@@ -45,7 +46,6 @@ class Strings {
   final String conditionTypeBad = '悪い';
   final String conditionTypeNormal = '普通';
   final String conditionTypeGood = '良い';
-  final String conditionTypeNone = '未設定';
 
   // ダイアログ
   final String dialogSuccessMessage = '処理が完了しました！';

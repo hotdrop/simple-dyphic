@@ -167,10 +167,12 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
       width: double.infinity,
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(child: Text('${_selectedRecord.showFormatDate()}')),
+              Divider(),
               _labelRecordInfo(),
             ],
           ),
