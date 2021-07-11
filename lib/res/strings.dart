@@ -34,13 +34,21 @@ class Strings {
   final String settingsPageTitle = '設定';
   final String settingsNotLoginEmailLabel = '未ログイン';
   final String settingsNotLoginNameLabel = 'ー';
-  final String settingsLoginInfo = '※Googleアカウントでログインできます。ログインするとデータのバックアップが可能になります。';
+  final String settingsLoginInfo = '※Googleアカウントでログインできます。ログインするとデータのバックアップや復元ができます。';
   final String settingsLoginNameNotSettingLabel = '未設定';
   final String settingsLoginEmailNotSettingLabel = '未設定';
   final String settingsLoginWithGoogle = 'ログイン';
   final String settingsLogoutLabel = 'ログアウト';
   final String settingsChangeAppThemeLabel = 'テーマ切り替え';
   final String settingsAppVersionLabel = 'アプリバージョン';
+  final String settingsBackupLabel = 'バックアップ';
+  final String settingsBackupDetailLabel = 'データをリモートにバックアップします。';
+  final String settingsBackupConfirmMessage = 'データをリモートにバックアップします。よろしいですか？';
+  final String settingsBackupSuccessMessage = 'バックアップが完了しました！';
+  final String settingsRestoreLabel = '復元';
+  final String settingsRestoreDetailLabel = 'バックアップからデータを復元します。';
+  final String settingsRestoreConfirmMessage = 'バックアップからデータを復元します。よろしいですか？\n注意！現在のデータは全て消えてしまいます。ご注意ください。';
+  final String settingsRestoreSuccessMessage = '復元が完了しました！';
 
   // 体調
   final String conditionTypeBad = '悪い';

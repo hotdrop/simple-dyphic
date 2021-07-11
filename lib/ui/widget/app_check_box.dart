@@ -51,15 +51,9 @@ class _AppCheckBoxState extends State<AppCheckBox> {
 
   Widget _viewLabel() {
     if (widget.isWalking) {
-      return Text(
-        R.res.strings.recordWalkingLabel,
-        style: TextStyle(fontSize: 20),
-      );
+      return Text(R.res.strings.recordWalkingLabel, style: TextStyle(fontSize: 20));
     } else {
-      return Text(
-        R.res.strings.recordToileLabel,
-        style: TextStyle(fontSize: 20),
-      );
+      return Text(R.res.strings.recordToileLabel, style: TextStyle(fontSize: 20));
     }
   }
 }

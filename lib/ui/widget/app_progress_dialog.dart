@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_dyphic/common/app_logger.dart';
 
 class AppProgressDialog<T> {
   const AppProgressDialog();
@@ -7,7 +8,7 @@ class AppProgressDialog<T> {
     BuildContext context, {
     required Future<T> Function() execute,
     required Function(T) onSuccess,
-    required Function(Exception, StackTrace) onError,
+    required Function(Exception) onError,
   }) async {
     _showProgressDialog(context);
     try {
@@ -15,8 +16,9 @@ class AppProgressDialog<T> {
       _closeDialog(context);
       onSuccess(result);
     } on Exception catch (e, s) {
+      AppLogger.e('エラーが発生しました。', e, s);
       _closeDialog(context);
-      onError(e, s);
+      onError(e);
     }
   }
 

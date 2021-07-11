@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info/package_info.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/repository/account_repository.dart';
+import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
 
@@ -68,6 +69,14 @@ class _SettingsViewModel extends BaseViewModel {
       await AppLogger.e('ログアウトに失敗しました。', e, s);
       rethrow;
     }
+  }
+
+  Future<void> backup() async {
+    await _read(recordRepositoryProvider).backup();
+  }
+
+  Future<void> restore() async {
+    await _read(recordRepositoryProvider).restore();
   }
 }
 

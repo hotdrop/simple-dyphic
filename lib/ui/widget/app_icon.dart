@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:simple_dyphic/model/record.dart';
-import 'package:simple_dyphic/res/R.dart';
 
 ///
 /// テーマ変更アイコン
 ///
 class ChangeThemeIcon extends StatelessWidget {
-  const ChangeThemeIcon(this.isDarkMode);
+  const ChangeThemeIcon({required this.isDarkMode, required this.size});
 
   final bool isDarkMode;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ChangeThemeIcon extends StatelessWidget {
     return Icon(
       iconData,
       color: iconColor,
-      size: R.res.integers.settingsPageIconSize,
+      size: size,
     );
   }
 }

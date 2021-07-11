@@ -52,6 +52,7 @@ class SettingsPage extends StatelessWidget {
         _rowSwitchTheme(context),
         _rowAppVersion(context),
         const Divider(),
+        if (loggedIn) ..._viewLoginMenu(context),
       ],
     );
   }
@@ -59,7 +60,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowAccountInfo(BuildContext context) {
     final viewModel = context.read(settingsViewModelProvider);
     return ListTile(
-      leading: Icon(Icons.account_circle, size: R.res.integers.settingsPageAccountIconSize),
+      leading: Icon(Icons.account_circle, size: 50),
       title: Text(viewModel.getLoginEmail(), style: TextStyle(fontSize: 12.0)),
       subtitle: Text(viewModel.getLoginUserName()),
       trailing: (viewModel.loggedIn) ? _logoutButton(context) : _loginButton(context),
@@ -67,13 +68,13 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _rowSwitchTheme(BuildContext context) {
-    final appSettings = context.read(appSettingsProvider)!;
+    final isDarkMode = context.read(appSettingsProvider)!.isDarkMode;
     return ListTile(
-      leading: ChangeThemeIcon(appSettings.isDarkMode),
+      leading: ChangeThemeIcon(isDarkMode: isDarkMode, size: 30),
       title: Text(R.res.strings.settingsChangeAppThemeLabel),
       trailing: Switch(
         onChanged: (isDark) => context.read(appSettingsProvider.notifier).saveThemeMode(isDark),
-        value: appSettings.isDarkMode,
+        value: isDarkMode,
       ),
     );
   }
@@ -81,7 +82,7 @@ class SettingsPage extends StatelessWidget {
   Widget _rowAppVersion(BuildContext context) {
     final appVersion = context.read(settingsViewModelProvider).appVersion;
     return ListTile(
-      leading: Icon(Icons.info, size: R.res.integers.settingsPageIconSize),
+      leading: Icon(Icons.info, size: 30),
       title: Text(R.res.strings.settingsAppVersionLabel),
       trailing: Text(appVersion),
     );
@@ -95,6 +96,61 @@ class SettingsPage extends StatelessWidget {
       },
       child: Text(R.res.strings.settingsLoginWithGoogle),
     );
+  }
+
+  List<Widget> _viewLoginMenu(BuildContext context) {
+    return <Widget>[
+      ListTile(
+        leading: Icon(Icons.backup, size: 30),
+        title: Text(R.res.strings.settingsBackupLabel),
+        subtitle: Text(R.res.strings.settingsBackupDetailLabel),
+        onTap: () => _showBackupDialog(context),
+      ),
+      ListTile(
+        leading: Icon(Icons.restore, size: 30),
+        title: Text(R.res.strings.settingsRestoreLabel),
+        subtitle: Text(R.res.strings.settingsRestoreDetailLabel),
+        onTap: () => _showRestoreDialog(context),
+      ),
+    ];
+  }
+
+  void _showBackupDialog(BuildContext context) {
+    AppDialog.okAndCancel(
+      message: R.res.strings.settingsBackupConfirmMessage,
+      onOk: () {
+        final dialog = AppProgressDialog<void>();
+        dialog.show(
+          context,
+          execute: context.read(settingsViewModelProvider).backup,
+          onSuccess: (_) {
+            AppDialog.ok(message: R.res.strings.settingsBackupSuccessMessage).show(context);
+          },
+          onError: (err) {
+            AppDialog.ok(message: '$err').show(context);
+          },
+        );
+      },
+    ).show(context);
+  }
+
+  void _showRestoreDialog(BuildContext context) {
+    AppDialog.okAndCancel(
+      message: R.res.strings.settingsRestoreConfirmMessage,
+      onOk: () {
+        final dialog = AppProgressDialog<void>();
+        dialog.show(
+          context,
+          execute: context.read(settingsViewModelProvider).restore,
+          onSuccess: (_) {
+            AppDialog.ok(message: R.res.strings.settingsRestoreSuccessMessage).show(context);
+          },
+          onError: (err) {
+            AppDialog.ok(message: '$err').show(context);
+          },
+        );
+      },
+    ).show(context);
   }
 
   Widget _loginDescriptionLabel(BuildContext context) {
@@ -115,7 +171,7 @@ class SettingsPage extends StatelessWidget {
           onSuccess: (_) {
             // 成功時は何もしない
           },
-          onError: (err, stack) {
+          onError: (err) {
             AppDialog.ok(message: '$err').show(context);
           },
         );

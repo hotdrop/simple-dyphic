@@ -25,7 +25,8 @@ class _RecordRepository {
     await _read(recordDaoProvider).saveAll(remoteRecords);
   }
 
-  Future<void> backup(List<Record> records) async {
+  Future<void> backup() async {
+    final records = await findAll();
     await _read(firestoreProvider).saveAll(records);
   }
 }

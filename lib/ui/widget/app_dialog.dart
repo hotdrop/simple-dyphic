@@ -36,15 +36,15 @@ class AppDialog {
         if (_onCancel != null)
           TextButton(
             onPressed: () {
-              _onCancel!.call();
               Navigator.pop(context);
+              _onCancel!.call();
             },
             child: Text(R.res.strings.dialogCancel),
           ),
         TextButton(
           onPressed: () {
-            _onOk?.call();
             Navigator.pop(context);
+            _onOk?.call();
           },
           child: Text(R.res.strings.dialogOk),
         ),

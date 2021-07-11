@@ -1,43 +1,5 @@
 import 'package:flutter/material.dart';
 
-class AppTextField extends StatefulWidget {
-  const AppTextField({
-    required this.label,
-    this.initValue,
-    this.hintText = '',
-    required this.onChanged,
-  });
-
-  final String label;
-  final String? initValue;
-  final String hintText;
-  final void Function(String) onChanged;
-
-  @override
-  _AppTextFieldState createState() => _AppTextFieldState();
-}
-
-class _AppTextFieldState extends State<AppTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: widget.label,
-        hintText: widget.hintText,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-      ),
-      initialValue: widget.initValue,
-      onChanged: (String value) {
-        setState(() {
-          widget.onChanged(value);
-        });
-      },
-    );
-  }
-}
-
 ///
 /// 複数行のテキストフィールド
 ///
