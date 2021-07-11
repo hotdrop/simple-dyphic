@@ -20,8 +20,8 @@ class Strings {
   final String recordMealDialogHint = '食事の内容(簡単に)';
 
   final String recordConditionOverview = '今日の体調を選んでください。';
-  final String recordWalkingLabel = '散歩した';
-  final String recordUncoLabel = '排便した';
+  final String recordWalkingLabel = '🚶‍♀️散歩した';
+  final String recordToileLabel = '💩排便した';
   final String recordConditionMemoTitle = '体調メモ';
   final String recordConditionMemoHint = '細かい体調はこちらに記載しましょう！';
   final String recordConditionSaveButton = '体調情報を保存する';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:simple_dyphic/res/R.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
 
 class AppCheckBox extends StatefulWidget {
   AppCheckBox._(this.isWalking, this.initValue, this.onChecked);
@@ -9,7 +8,7 @@ class AppCheckBox extends StatefulWidget {
     return AppCheckBox._(true, initValue, onChecked);
   }
 
-  factory AppCheckBox.unco({required bool initValue, required Function(bool) onChecked}) {
+  factory AppCheckBox.toilet({required bool initValue, required Function(bool) onChecked}) {
     return AppCheckBox._(false, initValue, onChecked);
   }
 
@@ -46,24 +45,21 @@ class _AppCheckBoxState extends State<AppCheckBox> {
           },
         ),
         _viewLabel(),
-        _viewIcon(),
       ],
     );
   }
 
   Widget _viewLabel() {
     if (widget.isWalking) {
-      return Text(R.res.strings.recordWalkingLabel);
+      return Text(
+        R.res.strings.recordWalkingLabel,
+        style: TextStyle(fontSize: 20),
+      );
     } else {
-      return Text(R.res.strings.recordUncoLabel);
-    }
-  }
-
-  Widget _viewIcon() {
-    if (widget.isWalking) {
-      return WalkingIcon.normal();
-    } else {
-      return Text(R.res.strings.recordUncoLabel);
+      return Text(
+        R.res.strings.recordToileLabel,
+        style: TextStyle(fontSize: 20),
+      );
     }
   }
 }

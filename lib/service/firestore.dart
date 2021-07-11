@@ -16,6 +16,7 @@ class _Firestore {
   static final String _recordLunchField = 'lunch';
   static final String _recordDinnerField = 'dinner';
   static final String _recordIsWalking = 'isWalking';
+  static final String _recordIsToilet = 'isToilet';
   static final String _recordCondition = 'condition';
   static final String _recordConditionMemoField = 'conditionMemo';
 
@@ -37,6 +38,7 @@ class _Firestore {
           lunch: _getString(map, _recordLunchField),
           dinner: _getString(map, _recordDinnerField),
           isWalking: _getBool(map, _recordIsWalking),
+          isToilet: _getBool(map, _recordIsToilet),
           condition: _getString(map, _recordCondition),
           conditionMemo: _getString(map, _recordConditionMemoField),
         );
@@ -71,7 +73,8 @@ class _Firestore {
       if (record.breakfast != null) map[_recordBreakFastField] = record.breakfast;
       if (record.lunch != null) map[_recordLunchField] = record.lunch;
       if (record.dinner != null) map[_recordDinnerField] = record.dinner;
-      if (record.isWalking != null) map[_recordIsWalking] = record.isWalking;
+      map[_recordIsWalking] = record.isWalking;
+      map[_recordIsToilet] = record.isToilet;
       if (record.condition != null) map[_recordCondition] = record.condition;
       if (record.conditionMemo != null) map[_recordConditionMemoField] = record.conditionMemo;
 

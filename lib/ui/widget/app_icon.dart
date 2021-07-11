@@ -26,51 +26,27 @@ class ChangeThemeIcon extends StatelessWidget {
 /// 体調アイコン
 ///
 class ConditionIcon extends StatelessWidget {
-  const ConditionIcon._(this._type, this._size);
+  const ConditionIcon({required this.type, required this.size});
 
-  factory ConditionIcon.normal(ConditionType type) {
-    return ConditionIcon._(type, R.res.integers.recordPageIconSize);
-  }
-
-  factory ConditionIcon.small(ConditionType type) {
-    return ConditionIcon._(type, R.res.integers.calendarIconSize);
-  }
-
-  final ConditionType _type;
-  final double _size;
+  final ConditionType type;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     IconData icon;
-    if (_type == ConditionType.bad) {
+    Color iconColor;
+    if (type == ConditionType.bad) {
       icon = Icons.sentiment_very_dissatisfied_sharp;
-    } else if (_type == ConditionType.good) {
+      iconColor = Colors.red;
+    } else if (type == ConditionType.normal) {
+      iconColor = Colors.orange;
+      icon = Icons.sentiment_satisfied_sharp;
+    } else if (type == ConditionType.good) {
+      iconColor = Colors.blue;
       icon = Icons.sentiment_very_satisfied_sharp;
     } else {
-      icon = Icons.sentiment_satisfied_sharp;
+      throw UnimplementedError('ConditionIconにおかしなステータスが設定されています type=$type');
     }
-    return Icon(icon, size: _size);
-  }
-}
-
-///
-/// 散歩アイコン
-///
-class WalkingIcon extends StatelessWidget {
-  const WalkingIcon._(this._size);
-
-  factory WalkingIcon.normal() {
-    return WalkingIcon._(R.res.integers.recordPageIconSize);
-  }
-
-  factory WalkingIcon.onCalendar() {
-    return WalkingIcon._(R.res.integers.calendarIconSize);
-  }
-
-  final double _size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(Icons.directions_walk, size: _size);
+    return Icon(icon, color: iconColor, size: size);
   }
 }

@@ -9,7 +9,8 @@ class RecordEntity extends HiveObject {
     this.breakfast,
     this.lunch,
     this.dinner,
-    this.isWalking,
+    this.isWalking = false,
+    this.isToilet = false,
     this.condition,
     this.conditionMemo,
   });
@@ -27,12 +28,15 @@ class RecordEntity extends HiveObject {
   final String? dinner;
 
   @HiveField(4)
-  final bool? isWalking;
+  final bool isWalking;
 
   @HiveField(5)
-  final String? condition;
+  final bool isToilet;
 
   @HiveField(6)
+  final String? condition;
+
+  @HiveField(7)
   final String? conditionMemo;
 
   static const String boxName = 'records';

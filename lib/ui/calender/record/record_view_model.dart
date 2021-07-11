@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/dyphic_id.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
@@ -40,8 +41,13 @@ class _RecordViewModel extends BaseViewModel {
     _isUpdate = true;
   }
 
-  Future<void> inputIsWalking(bool? isWalking) async {
-    _inputRecord.isWalking = isWalking ?? false;
+  Future<void> inputIsWalking(bool isCheck) async {
+    _inputRecord.isWalking = isCheck;
+    _isUpdate = true;
+  }
+
+  Future<void> inputIsToilet(bool isCheck) async {
+    _inputRecord.isToilet = isCheck;
     _isUpdate = true;
   }
 
@@ -57,6 +63,7 @@ class _RecordViewModel extends BaseViewModel {
 
   Future<void> save() async {
     final record = _inputRecord.toRecord();
+    AppLogger.d('レコードを保存します。');
     await _read(recordRepositoryProvider).save(record);
   }
 }
@@ -71,6 +78,7 @@ class InputRecord {
     required this.lunch,
     required this.dinner,
     required this.isWalking,
+    required this.isToilet,
     required this.conditionType,
     required this.conditionMemo,
   });
@@ -82,7 +90,8 @@ class InputRecord {
       breakfast: record.breakfast ?? '',
       lunch: record.lunch ?? '',
       dinner: record.dinner ?? '',
-      isWalking: record.isWalking ?? false,
+      isWalking: record.isWalking,
+      isToilet: record.isToilet,
       conditionType: Condition.toType(record.condition),
       conditionMemo: record.conditionMemo ?? '',
     );
@@ -93,6 +102,7 @@ class InputRecord {
   String lunch;
   String dinner;
   bool isWalking;
+  bool isToilet;
   ConditionType? conditionType;
   String conditionMemo;
 
@@ -103,6 +113,7 @@ class InputRecord {
       lunch: lunch,
       dinner: dinner,
       isWalking: isWalking,
+      isToilet: isToilet,
       condition: Condition.toStr(conditionType),
       conditionMemo: conditionMemo,
     );

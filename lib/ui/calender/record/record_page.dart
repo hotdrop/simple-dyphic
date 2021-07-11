@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
-import 'package:simple_dyphic/model/app_settings.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/calender/record/record_view_model.dart';
 import 'package:simple_dyphic/ui/calender/record/widget_meal_card.dart';
 import 'package:simple_dyphic/ui/widget/app_check_box.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_text_field.dart';
 import 'package:simple_dyphic/ui/widget/condition_radio_group.dart';
@@ -132,7 +129,7 @@ class RecordPage extends StatelessWidget {
       Center(
         child: Text(R.res.strings.recordConditionOverview),
       ),
-      Divider(),
+      const SizedBox(height: 16),
       ConditionRadioGroup(
         initSelectValue: _record.getConditionType(),
         onSelected: (newVal) => context.read(recordViewModelProvider).selectCondition(newVal),
@@ -142,11 +139,18 @@ class RecordPage extends StatelessWidget {
 
   Widget _viewCheckBoxes(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         AppCheckBox.walking(
-          initValue: _record.isWalking ?? false,
-          onChecked: (bool? isCheck) {
+          initValue: _record.isWalking,
+          onChecked: (bool isCheck) {
             context.read(recordViewModelProvider).inputIsWalking(isCheck);
+          },
+        ),
+        AppCheckBox.toilet(
+          initValue: _record.isToilet,
+          onChecked: (bool isCheck) {
+            context.read(recordViewModelProvider).inputIsToilet(isCheck);
           },
         ),
       ],
@@ -155,11 +159,11 @@ class RecordPage extends StatelessWidget {
 
   Widget _viewConditionMemo(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: MultiLineTextField(
         label: R.res.strings.recordConditionMemoTitle,
         initValue: _record.conditionMemo,
-        limitLine: 10,
+        limitLine: 7,
         hintText: R.res.strings.recordConditionMemoHint,
         onChanged: context.read(recordViewModelProvider).inputConditionMemo,
       ),

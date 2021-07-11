@@ -36,7 +36,7 @@ class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
   Widget _typeRadio(BuildContext context, ConditionType type) {
     return Column(
       children: [
-        ConditionIcon.normal(type),
+        ConditionIcon(type: type, size: 50),
         Radio<ConditionType>(
           value: type,
           groupValue: _selectType,

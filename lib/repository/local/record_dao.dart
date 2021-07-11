@@ -25,6 +25,7 @@ class _RecordDao {
               lunch: e.lunch,
               dinner: e.dinner,
               isWalking: e.isWalking,
+              isToilet: e.isToilet,
               condition: e.condition,
               conditionMemo: e.conditionMemo,
             ))
@@ -38,12 +39,12 @@ class _RecordDao {
       lunch: record.lunch,
       dinner: record.dinner,
       isWalking: record.isWalking,
+      isToilet: record.isToilet,
       condition: record.condition,
       conditionMemo: record.conditionMemo,
     );
 
     final box = await Hive.openBox<RecordEntity>(RecordEntity.boxName);
-    await box.clear();
     await box.add(entity);
   }
 
@@ -55,6 +56,7 @@ class _RecordDao {
               lunch: r.lunch,
               dinner: r.dinner,
               isWalking: r.isWalking,
+              isToilet: r.isToilet,
               condition: r.condition,
               conditionMemo: r.conditionMemo,
             ))

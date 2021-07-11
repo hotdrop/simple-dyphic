@@ -23,9 +23,10 @@ class _MainPageState extends State<MainPage> {
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: false,
         items: _allDestinations
-            .map(
-              (item) => BottomNavigationBarItem(label: item.title, icon: Icon(item.icon)),
-            )
+            .map((item) => BottomNavigationBarItem(
+                  label: item.title,
+                  icon: Icon(item.icon),
+                ))
             .toList(),
         onTap: (i) {
           setState(() {

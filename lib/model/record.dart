@@ -13,6 +13,7 @@ class Record {
     this.lunch,
     this.dinner,
     this.isWalking,
+    this.isToilet,
     this.condition,
     this.conditionMemo,
   );
@@ -22,15 +23,16 @@ class Record {
     String? breakfast,
     String? lunch,
     String? dinner,
-    bool? isWalking,
+    bool isWalking = false,
+    bool isToilet = false,
     String? condition,
     String? conditionMemo,
   }) {
-    return Record._(id, DyphicID.idToDate(id), breakfast, lunch, dinner, isWalking, condition, conditionMemo);
+    return Record._(id, DyphicID.idToDate(id), breakfast, lunch, dinner, isWalking, isToilet, condition, conditionMemo);
   }
 
   factory Record.createEmpty(DateTime idDate) {
-    return Record._(DyphicID.dateToId(idDate), idDate, null, null, null, null, null, null);
+    return Record._(DyphicID.dateToId(idDate), idDate, null, null, null, false, false, null, null);
   }
 
   final int id;
@@ -38,7 +40,8 @@ class Record {
   final String? breakfast;
   final String? lunch;
   final String? dinner;
-  final bool? isWalking;
+  final bool isWalking;
+  final bool isToilet;
   final String? condition;
   final String? conditionMemo;
 
@@ -55,12 +58,7 @@ class Record {
   }
 
   bool notRegister() {
-    return breakfast == null &&
-        lunch == null &&
-        dinner == null &&
-        isWalking == null &&
-        condition == null &&
-        conditionMemo == null;
+    return breakfast == null && lunch == null && dinner == null && condition == null && conditionMemo == null;
   }
 
   @override
@@ -71,6 +69,7 @@ class Record {
     lunch: $lunch
     dinner: $dinner
     walking: $isWalking
+    toilet: $isToilet
     condition: $condition
     conditionMemo: $conditionMemo
     ''';

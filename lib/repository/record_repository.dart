@@ -12,21 +12,17 @@ class _RecordRepository {
   final Reader _read;
 
   Future<List<Record>> findAll() async {
-    final records = await _read(recordDaoProvider).findAll();
-    if (records.isNotEmpty) {
-      return records;
-    }
-
-    AppLogger.d('ローカルで保持しているレコード情報が0件のためリモートから取得します');
-    final remoteRecords = await _read(firestoreProvider).findAll();
-    AppLogger.d('リモートから取得したレコード件数: ${remoteRecords.length}');
-    await _read(recordDaoProvider).saveAll(remoteRecords);
-
-    return remoteRecords;
+    return await _read(recordDaoProvider).findAll();
   }
 
   Future<void> save(Record record) async {
     await _read(recordDaoProvider).save(record);
+  }
+
+  Future<void> restore() async {
+    final remoteRecords = await _read(firestoreProvider).findAll();
+    AppLogger.d('リモートから取得したレコード件数: ${remoteRecords.length}');
+    await _read(recordDaoProvider).saveAll(remoteRecords);
   }
 
   Future<void> backup(List<Record> records) async {

@@ -3,6 +3,7 @@ import 'package:simple_dyphic/model/dyphic_id.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/calender/record/record_page.dart';
+import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DyphicCalendar extends StatefulWidget {
@@ -108,33 +109,27 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
     }
 
     final record = argRecords.first;
-    // TODO 体調のアイコン
-    // if (record.typeMedical()) {
-    //   markers.add(Image.asset(
-    //     'res/images/ic_hospital.png',
-    //     width: R.res.integers.calendarIconSize,
-    //     height: R.res.integers.calendarIconSize,
-    //   ));
-    // } else {
-    //   markers.add(SizedBox(width: R.res.integers.calendarIconSize));
-    // }
+    final double calendarIconSize = 15;
 
-    // TODO 排便アイコン
-    // if (record.typeInjection()) {
-    //   markers.add(Image.asset(
-    //     'res/images/ic_inject.png',
-    //     width: R.res.integers.calendarIconSize,
-    //     height: R.res.integers.calendarIconSize,
-    //   ));
-    // } else {
-    //   markers.add(SizedBox(width: R.res.integers.calendarIconSize));
-    // }
-
-    // ウォーキングアイコン
-    if (record.isWalking ?? false) {
-      markers.add(Icon(Icons.directions_walk, size: R.res.integers.calendarIconSize, color: R.res.colors.walking));
+    // 体調アイコン
+    if (record.condition != null) {
+      markers.add(ConditionIcon(type: record.getConditionType()!, size: calendarIconSize));
     } else {
-      markers.add(SizedBox(width: R.res.integers.calendarIconSize));
+      markers.add(SizedBox(width: calendarIconSize));
+    }
+
+    // 排便マーク
+    if (record.isToilet) {
+      markers.add(SizedBox(width: calendarIconSize, child: Text('💩')));
+    } else {
+      markers.add(SizedBox(width: calendarIconSize));
+    }
+
+    // ウォーキングマーク
+    if (record.isWalking) {
+      markers.add(SizedBox(width: calendarIconSize, child: Text('🚶‍♀️')));
+    } else {
+      markers.add(SizedBox(width: calendarIconSize));
     }
 
     return Row(
@@ -192,7 +187,7 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
       }
 
       // 散歩
-      if (_selectedRecord.isWalking ?? false) {
+      if (_selectedRecord.isWalking) {
         widgets.add(Text(R.res.strings.calenderDetailWalkingLabel, style: TextStyle(color: R.res.colors.walking)));
         widgets.add(SizedBox(height: 8.0));
       }
