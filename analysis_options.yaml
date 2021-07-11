@@ -1,0 +1,33 @@
+# https://github.com/google/pedantic/blob/master/lib/analysis_options.1.11.0.yaml
+include: package:pedantic/analysis_options.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    # flutterの同ファイルではwarningだが個人開発ではerrorで良いと思った。
+    missing_required_param: error
+    missing_return: error
+  exclude:
+    - 'bin/cache/**'
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+
+linter:
+  rules:
+    # Dartではこの書き方に慣れていたので追加
+    sort_constructors_first: true
+    # effective_dartより
+    avoid_shadowing_type_parameters: false
+    camel_case_types: true
+    cancel_subscriptions: true
+    close_sinks: true
+    comment_references: true
+    constant_identifier_names: true
+    control_flow_in_finally: true
+    empty_statements: true
+    # flutterの同ファイルでもコメントアウトしており個人的にも型を明示した方が可読性が上がるケースがあると判断した
+    omit_local_variable_types: false
+    # ウザかった。flutterの同ファイルでも too many false positives とのこと
+    unawaited_futures: false
