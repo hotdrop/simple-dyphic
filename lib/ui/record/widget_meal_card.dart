@@ -31,7 +31,7 @@ class MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 130,
+      width: 140,
       child: Card(
         shadowColor: _shadowColor,
         elevation: 4.0,
@@ -58,9 +58,10 @@ class MealCard extends StatelessWidget {
   Widget _editField(BuildContext context) {
     return TextFormField(
       initialValue: _initValue,
-      maxLines: 3,
+      maxLines: 5,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
+        labelStyle: TextStyle(fontSize: 14),
       ),
       onChanged: (String? v) {
         _onChanged(v);

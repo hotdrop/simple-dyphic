@@ -28,10 +28,16 @@ class RecordPage extends StatelessWidget {
       onWillPop: () async {
         final isUpdate = context.read(recordViewModelProvider).isUpdate;
         if (isUpdate) {
-          await context.read(recordViewModelProvider).save();
-          Navigator.pop(context, true);
+          AppDialog.okAndCancel(
+            message: R.res.strings.recordCloseAttensionMessage,
+            onOk: () async {
+              Navigator.pop(context, false);
+            },
+          ).show(context);
+        } else {
+          Navigator.pop(context, false);
         }
-        return true;
+        return false;
       },
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -82,6 +88,8 @@ class RecordPage extends StatelessWidget {
           _viewCheckBoxes(context),
           _viewConditionMemo(context),
           const SizedBox(height: 16),
+          _viewSaveButton(context),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -92,7 +100,7 @@ class RecordPage extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 170,
+          height: 200,
           width: double.infinity,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -160,6 +168,19 @@ class RecordPage extends StatelessWidget {
         limitLine: 7,
         hintText: R.res.strings.recordConditionMemoHint,
         onChanged: context.read(recordViewModelProvider).inputConditionMemo,
+      ),
+    );
+  }
+
+  Widget _viewSaveButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: ElevatedButton(
+        onPressed: () async {
+          await context.read(recordViewModelProvider).save();
+          Navigator.pop(context, true);
+        },
+        child: Text(R.res.strings.recordSaveButton),
       ),
     );
   }

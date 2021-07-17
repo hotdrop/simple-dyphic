@@ -6,25 +6,26 @@ class Strings {
 
   final String appTitle = '体調管理';
 
-  final String calenderPageTitle = 'カレンダー';
+  // カレンダー
+  final String calenderPageTitle = '体調管理アプリ';
   final String calenderNoEvent = '予定なし';
   final String calenderUnRegisterLabel = 'この日の記録は未登録です。\nここをタップして記録しましょう。';
+  final String calenderDetailConditionLabel = '体調: ';
   final String calenderDetailWalkingLabel = '散歩した';
+  final String calenderDetailToiletLabel = '排便あり';
+  final String calenderDetailInfoSeparator = '、';
   final String calenderDetailConditionMemoLabel = '【体調メモ】';
 
   // 記録ページ
   final String recordPageTitleDateFormat = 'yyyy年MM月dd日';
-
-  final String recordConditionOverview = '今日の体調を選んでください。';
+  final String recordConditionOverview = '今日の体調は？';
   final String recordWalkingLabel = '🚶‍♀️散歩した';
   final String recordToileLabel = '💩排便した';
   final String recordConditionMemoTitle = '体調メモ';
   final String recordConditionMemoHint = '細かい体調はこちらに記載しましょう！';
   final String recordConditionSaveButton = '体調情報を保存する';
-
-  final String recordMemoTitle = '今日のメモ';
-  final String recordMemoHint = 'その他、残しておきたい記録があったらここに記載してください。';
-  final String recordMemoSaveButton = 'メモを保存する';
+  final String recordSaveButton = '保存する';
+  final String recordCloseAttensionMessage = '内容が更新されていますが、保存せずに閉じてよろしいですか？';
 
   // 設定ページ
   final String settingsPageTitle = '設定';
@@ -52,8 +53,6 @@ class Strings {
   final String conditionTypeGood = '良い';
 
   // ダイアログ
-  final String dialogSuccessMessage = '処理が完了しました！';
-  final String dialogErrorMessage = 'エラーが発生しました(´·ω·`)';
   final String dialogOk = 'OK';
   final String dialogCancel = 'キャンセル';
 }

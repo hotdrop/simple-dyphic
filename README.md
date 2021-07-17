@@ -1,9 +1,9 @@
 # simple_dyphic
-A new Flutter project.
+体調管理アプリdyphicのスーパー簡易版アプリ
 
 # Getting Started
 `flutter pub run build_runner build`
 `flutter build apk --split-per-abi -t lib/main.dart --release`
 
 # todo
-firestoreへのバックアップ＆リストア
+- カレンダー詳細情報の修正

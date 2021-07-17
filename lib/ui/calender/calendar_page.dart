@@ -143,13 +143,13 @@ class CalenderPage extends StatelessWidget {
               context.read(calendarViewModelProvider).refresh(selectedRecord.id);
             }
           },
-          child: _detailDailyRecord(context),
+          child: _viewSelectedRecordDetail(context),
         ),
       ),
     );
   }
 
-  Widget _detailDailyRecord(BuildContext context) {
+  Widget _viewSelectedRecordDetail(BuildContext context) {
     final selectedRecord = context.read(calendarViewModelProvider).selectedRecord;
     return Container(
       width: double.infinity,
@@ -159,9 +159,9 @@ class CalenderPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Text('${selectedRecord.showFormatDate()}')),
+              _viewTitleOnDetail(selectedRecord),
               Divider(),
-              _labelRecordInfo(selectedRecord),
+              ..._viewContentsOnDetail(selectedRecord),
             ],
           ),
         ),
@@ -169,36 +169,32 @@ class CalenderPage extends StatelessWidget {
     );
   }
 
-  Widget _labelRecordInfo(Record selectedRecord) {
-    final widgets = <Widget>[];
+  Widget _viewTitleOnDetail(Record selectedRecord) {
+    return Center(child: Text('${selectedRecord.showFormatDate()}'));
+  }
 
-    if (!selectedRecord.notRegister()) {
-      // 体調の詳細
-      if (selectedRecord.condition != null) {
-        widgets.add(Text(selectedRecord.condition!));
-        widgets.add(SizedBox(height: 8.0));
-      }
+  List<Widget> _viewContentsOnDetail(Record selectedRecord) {
+    List<Widget> widgets = [];
 
-      // 散歩
-      if (selectedRecord.isWalking) {
-        widgets.add(Text(R.res.strings.calenderDetailWalkingLabel, style: TextStyle(color: R.res.colors.walking)));
-        widgets.add(SizedBox(height: 8.0));
-      }
-
-      // 体調メモ
-      final memo = selectedRecord.conditionMemo;
-      if (memo != null) {
-        widgets.add(Text(R.res.strings.calenderDetailConditionMemoLabel));
-        widgets.add(_labelMemo(memo));
-      }
-    } else {
+    if (selectedRecord.notRegister()) {
       widgets.add(Text(R.res.strings.calenderUnRegisterLabel));
+      return widgets;
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: widgets,
-    );
+    final infoStr = selectedRecord.getInfoJoinStr();
+    if (infoStr.isNotEmpty) {
+      widgets.add(Text(infoStr));
+      widgets.add(SizedBox(height: 16));
+    }
+
+    final memo = selectedRecord.conditionMemo;
+    if (memo != null && memo.isNotEmpty) {
+      widgets.add(Text(R.res.strings.calenderDetailConditionMemoLabel));
+      widgets.add(_labelMemo(memo));
+    }
+
+    // 体調メモ
+    return widgets;
   }
 
   Widget _labelMemo(String memo) {

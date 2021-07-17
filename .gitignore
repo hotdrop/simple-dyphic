@@ -49,6 +49,7 @@ app.*.map.json
 *.freezed.dart
 *.g.dart
 *.mocks.dart
+**/android/keystore
 *.keystore
 **/android/**/google-services.json
 **/android/key.properties

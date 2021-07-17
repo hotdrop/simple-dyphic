@@ -61,6 +61,24 @@ class Record {
     return breakfast == null && lunch == null && dinner == null && condition == null && conditionMemo == null;
   }
 
+  String getInfoJoinStr() {
+    List<String> infos = [];
+
+    if (condition != null) {
+      infos.add('${R.res.strings.calenderDetailConditionLabel}$condition');
+    }
+    if (isWalking) {
+      infos.add('${R.res.strings.calenderDetailWalkingLabel}');
+    }
+    if (isWalking) {
+      infos.add('${R.res.strings.calenderDetailToiletLabel}');
+    }
+    if (infos.isNotEmpty) {
+      return infos.join(R.res.strings.calenderDetailInfoSeparator);
+    }
+    return '';
+  }
+
   @override
   String toString() {
     return '''
