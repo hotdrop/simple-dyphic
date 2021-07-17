@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.hotdrop.esdyphic">
    <application
-        android:label="simple_dyphic"
-        android:icon="@mipmap/ic_launcher">
+        android:label="体調管理2"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
