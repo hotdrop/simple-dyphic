@@ -14,10 +14,6 @@ class Strings {
 
   // 記録ページ
   final String recordPageTitleDateFormat = 'yyyy年MM月dd日';
-  final String recordMorningDialogTitle = '朝食';
-  final String recordLunchDialogTitle = '昼食';
-  final String recordDinnerDialogTitle = '夕食';
-  final String recordMealDialogHint = '食事の内容(簡単に)';
 
   final String recordConditionOverview = '今日の体調を選んでください。';
   final String recordWalkingLabel = '🚶‍♀️散歩した';

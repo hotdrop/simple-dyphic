@@ -21,6 +21,6 @@ class _CalendarViewModel extends BaseViewModel {
 
   Future<void> refresh() async {
     _records = await _read(recordRepositoryProvider).findAll();
-    onSuccess();
+    notifyListeners();
   }
 }

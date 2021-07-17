@@ -33,17 +33,20 @@ class RecordPage extends StatelessWidget {
         }
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(title: Text(_record.showFormatDate())),
-        body: Consumer(
-          builder: (context, watch, child) {
-            final uiState = watch(recordViewModelProvider).uiState;
-            return uiState.when(
-              loading: () => _onLoading(context),
-              success: () => _onSuccess(context),
-              error: (err) => _onError(context, '$err'),
-            );
-          },
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(title: Text(_record.showFormatDate())),
+          body: Consumer(
+            builder: (context, watch, child) {
+              final uiState = watch(recordViewModelProvider).uiState;
+              return uiState.when(
+                loading: () => _onLoading(context),
+                success: () => _onSuccess(context),
+                error: (err) => _onError(context, '$err'),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -94,28 +97,19 @@ class RecordPage extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              MealCard(
-                type: MealType.morning,
-                detail: _record.breakfast,
-                onEditValue: (String? newVal) {
-                  viewModel.inputBreakfast(newVal);
-                },
+              MealCard.breakfast(
+                initValue: _record.breakfast,
+                onChanged: (String? v) => viewModel.inputBreakfast(v),
               ),
               const SizedBox(width: 4),
-              MealCard(
-                type: MealType.lunch,
-                detail: _record.lunch,
-                onEditValue: (String? newVal) {
-                  viewModel.inputLunch(newVal);
-                },
+              MealCard.lunch(
+                initValue: _record.lunch,
+                onChanged: (String? v) => viewModel.inputLunch(v),
               ),
               const SizedBox(width: 4),
-              MealCard(
-                type: MealType.dinner,
-                detail: _record.dinner,
-                onEditValue: (String? newVal) {
-                  viewModel.inputDinner(newVal);
-                },
+              MealCard.dinner(
+                initValue: _record.dinner,
+                onChanged: (String? v) => viewModel.inputDinner(v),
               ),
             ],
           ),

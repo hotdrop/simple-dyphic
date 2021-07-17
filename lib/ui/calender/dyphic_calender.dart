@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/dyphic_id.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/ui/calender/calendar_view_model.dart';
 import 'package:simple_dyphic/ui/calender/record/record_page.dart';
 import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DyphicCalendar extends StatefulWidget {
   const DyphicCalendar({required this.records, required this.onReturnEditPage});
@@ -149,7 +152,11 @@ class _DyphicCalendarState extends State<DyphicCalendar> {
         child: InkWell(
           onTap: () async {
             final isUpdate = await RecordPage.start(context, _selectedRecord);
-            widget.onReturnEditPage(isUpdate);
+            AppLogger.d('記録ページから戻ってきました。更新: $isUpdate');
+            if (isUpdate) {
+              context.read(calendarViewModelProvider).refresh();
+            }
+            // widget.onReturnEditPage(isUpdate);
           },
           child: _detailDailyRecord(context),
         ),

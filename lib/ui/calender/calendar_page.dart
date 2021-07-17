@@ -45,9 +45,10 @@ class CalenderPage extends StatelessWidget {
     return DyphicCalendar(
       records: context.read(calendarViewModelProvider).records,
       onReturnEditPage: (bool isUpdate) {
-        if (isUpdate) {
-          context.read(calendarViewModelProvider).refresh();
-        }
+        // AppLogger.d('記録ページから戻ってきました。更新: $isUpdate');
+        // if (isUpdate) {
+        //   context.read(calendarViewModelProvider).refresh();
+        // }
       },
     );
   }
