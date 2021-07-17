@@ -32,6 +32,23 @@ class _RecordDao {
         .toList();
   }
 
+  Future<Record> find(int key) async {
+    final box = await Hive.openBox<RecordEntity>(RecordEntity.boxName);
+    AppLogger.d('key=$key');
+    final e = box.get(key)!;
+
+    return Record.create(
+      id: e.id,
+      breakfast: e.breakfast,
+      lunch: e.lunch,
+      dinner: e.dinner,
+      isWalking: e.isWalking,
+      isToilet: e.isToilet,
+      condition: e.condition,
+      conditionMemo: e.conditionMemo,
+    );
+  }
+
   Future<void> save(Record record) async {
     final entity = RecordEntity(
       id: record.id,
@@ -45,7 +62,7 @@ class _RecordDao {
     );
 
     final box = await Hive.openBox<RecordEntity>(RecordEntity.boxName);
-    await box.add(entity);
+    await box.put(entity.id, entity);
   }
 
   Future<void> saveAll(List<Record> records) async {

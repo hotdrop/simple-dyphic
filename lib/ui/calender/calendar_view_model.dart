@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_dyphic/common/app_logger.dart';
+import 'package:simple_dyphic/model/dyphic_id.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
@@ -11,16 +13,54 @@ class _CalendarViewModel extends BaseViewModel {
   }
 
   final Reader _read;
-  late List<Record> _records;
-  List<Record> get records => _records;
+
+  final Map<int, Record> _recordsMap = {};
+  Map<int, Record> get recordsMap => _recordsMap;
+
+  late DateTime _selectedDate;
+  DateTime get selectedDate => _selectedDate;
+
+  late Record _selectedRecord;
+  Record get selectedRecord => _selectedRecord;
+
+  late DateTime _focusDate;
+  DateTime get focusDate => _focusDate;
 
   Future<void> _init() async {
-    _records = await _read(recordRepositoryProvider).findAll();
+    final records = await _read(recordRepositoryProvider).findAll();
+    _selectedRecord = Record.createEmpty(DateTime.now());
+
+    final nowDate = DateTime.now();
+    records.forEach((record) {
+      _recordsMap[record.id] = record;
+      if (record.isSameDay(nowDate)) {
+        _selectedRecord = record;
+      }
+    });
+    _focusDate = nowDate;
+    _selectedDate = nowDate;
+
     onSuccess();
   }
 
-  Future<void> refresh() async {
-    _records = await _read(recordRepositoryProvider).findAll();
+  List<Record> getRecordForDay(DateTime date) {
+    final id = DyphicID.makeRecordId(date);
+    final event = _recordsMap[id];
+    return event != null ? [event] : [];
+  }
+
+  void onDaySelected(DateTime selectDate, {Record? selectedItem}) {
+    final id = DyphicID.makeRecordId(selectDate);
+    _selectedRecord = _recordsMap[id] ?? Record.createEmpty(selectDate);
+    _focusDate = selectDate;
+    _selectedDate = selectDate;
+    notifyListeners();
+  }
+
+  Future<void> refresh(int id) async {
+    final updateRecord = await _read(recordRepositoryProvider).find(id);
+    _recordsMap[id] = updateRecord;
+    _selectedRecord = updateRecord;
     notifyListeners();
   }
 }

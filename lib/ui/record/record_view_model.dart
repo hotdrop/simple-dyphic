@@ -63,7 +63,7 @@ class _RecordViewModel extends BaseViewModel {
 
   Future<void> save() async {
     final record = _inputRecord.toRecord();
-    AppLogger.d('レコードを保存します。');
+    AppLogger.d('レコードを保存します。key=${record.id}');
     await _read(recordRepositoryProvider).save(record);
   }
 }

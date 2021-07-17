@@ -15,6 +15,10 @@ class _RecordRepository {
     return await _read(recordDaoProvider).findAll();
   }
 
+  Future<Record> find(int id) async {
+    return await _read(recordDaoProvider).find(id);
+  }
+
   Future<void> save(Record record) async {
     await _read(recordDaoProvider).save(record);
   }
