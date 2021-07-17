@@ -49,7 +49,7 @@ app.*.map.json
 *.freezed.dart
 *.g.dart
 *.mocks.dart
-/keystore
+*.keystore
 **/android/**/google-services.json
 **/android/key.properties
 **/ios/Runner/GoogleService-Info.plist

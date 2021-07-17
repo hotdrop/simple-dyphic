@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/dyphic_id.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
