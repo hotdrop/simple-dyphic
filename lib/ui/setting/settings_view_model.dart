@@ -57,7 +57,7 @@ class _SettingsViewModel extends BaseViewModel {
     nowLoading();
     await _read(accountRepositoryProvider).login();
     _loginStatus = _LoginStatus.loggedIn;
-    notifyListeners();
+    onSuccess();
   }
 
   Future<void> logout() async {
