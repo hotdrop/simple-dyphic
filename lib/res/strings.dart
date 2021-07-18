@@ -7,7 +7,7 @@ class Strings {
   final String appTitle = '体調管理';
 
   // カレンダー
-  final String calenderPageTitle = '体調管理アプリ';
+  final String calenderPageTitle = 'カレンダー';
   final String calenderNoEvent = '予定なし';
   final String calenderUnRegisterLabel = 'この日の記録は未登録です。\nここをタップして記録しましょう。';
   final String calenderDetailConditionLabel = '体調: ';
