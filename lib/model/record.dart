@@ -70,7 +70,7 @@ class Record {
     if (isWalking) {
       infos.add('${R.res.strings.calenderDetailWalkingLabel}');
     }
-    if (isWalking) {
+    if (isToilet) {
       infos.add('${R.res.strings.calenderDetailToiletLabel}');
     }
     if (infos.isNotEmpty) {
