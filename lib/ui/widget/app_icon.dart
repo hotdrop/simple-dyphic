@@ -26,27 +26,36 @@ class ChangeThemeIcon extends StatelessWidget {
 /// 体調アイコン
 ///
 class ConditionIcon extends StatelessWidget {
-  const ConditionIcon({required this.type, required this.size});
+  const ConditionIcon._(this._type, this._size, this._selected);
 
-  final ConditionType type;
-  final double size;
+  factory ConditionIcon.onRadioGroup({required ConditionType type, required double size, required bool selected}) {
+    return ConditionIcon._(type, size, selected);
+  }
+
+  factory ConditionIcon.onCalendar({required ConditionType type, required double size}) {
+    return ConditionIcon._(type, size, true);
+  }
+
+  final ConditionType _type;
+  final double _size;
+  final bool _selected;
 
   @override
   Widget build(BuildContext context) {
     IconData icon;
     Color iconColor;
-    if (type == ConditionType.bad) {
+    if (_type == ConditionType.bad) {
       icon = Icons.sentiment_very_dissatisfied_sharp;
-      iconColor = Colors.red;
-    } else if (type == ConditionType.normal) {
-      iconColor = Colors.orange;
+      iconColor = _selected ? Colors.red : Colors.grey;
+    } else if (_type == ConditionType.normal) {
       icon = Icons.sentiment_satisfied_sharp;
-    } else if (type == ConditionType.good) {
-      iconColor = Colors.blue;
+      iconColor = _selected ? Colors.orange : Colors.grey;
+    } else if (_type == ConditionType.good) {
       icon = Icons.sentiment_very_satisfied_sharp;
+      iconColor = _selected ? Colors.blue : Colors.grey;
     } else {
-      throw UnimplementedError('ConditionIconにおかしなステータスが設定されています type=$type');
+      throw UnimplementedError('ConditionIconにおかしなステータスが設定されています type=$_type');
     }
-    return Icon(icon, color: iconColor, size: size);
+    return Icon(icon, color: iconColor, size: _size);
   }
 }

@@ -101,7 +101,7 @@ class CalenderPage extends StatelessWidget {
 
     // 体調アイコン
     if (record.condition != null) {
-      markers.add(ConditionIcon(type: record.getConditionType()!, size: calendarIconSize));
+      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: calendarIconSize));
     } else {
       markers.add(SizedBox(width: calendarIconSize));
     }
