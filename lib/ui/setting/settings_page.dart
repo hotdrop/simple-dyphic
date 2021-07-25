@@ -85,6 +85,9 @@ class SettingsPage extends StatelessWidget {
       leading: Icon(Icons.note),
       title: Text(R.res.strings.settingsLicenseLavel),
       trailing: Icon(Icons.arrow_forward_ios),
+      onTap: () {
+        showLicensePage(context: context);
+      },
     );
   }
 
