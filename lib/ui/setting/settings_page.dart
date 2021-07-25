@@ -82,7 +82,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _rowLicense(BuildContext context) {
     return ListTile(
-      leading: Icon(),
+      leading: Icon(Icons.note),
       title: Text(R.res.strings.settingsLicenseLavel),
       trailing: Icon(Icons.arrow_forward_ios),
     );
