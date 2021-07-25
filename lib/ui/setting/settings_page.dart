@@ -50,6 +50,7 @@ class SettingsPage extends StatelessWidget {
         if (!loggedIn) _loginDescriptionLabel(context),
         const Divider(),
         _rowSwitchTheme(context),
+        _rowLicense(context),
         _rowAppVersion(context),
         const Divider(),
         if (loggedIn) ..._viewLoginMenu(context),
@@ -76,6 +77,14 @@ class SettingsPage extends StatelessWidget {
         onChanged: (isDark) => context.read(appSettingsProvider.notifier).saveThemeMode(isDark),
         value: isDarkMode,
       ),
+    );
+  }
+
+  Widget _rowLicense(BuildContext context) {
+    return ListTile(
+      leading: Icon(),
+      title: Text(R.res.strings.settingsLicenseLavel),
+      trailing: Icon(Icons.arrow_forward_ios),
     );
   }
 

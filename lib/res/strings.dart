@@ -37,6 +37,7 @@ class Strings {
   final String settingsLoginWithGoogle = 'ログイン';
   final String settingsLogoutLabel = 'ログアウト';
   final String settingsChangeAppThemeLabel = 'テーマ切り替え';
+  final String settingsLicenseLavel = 'ライセンス情報';
   final String settingsAppVersionLabel = 'アプリバージョン';
   final String settingsBackupLabel = 'バックアップ';
   final String settingsBackupDetailLabel = 'データをリモートにバックアップします。';
