@@ -4,33 +4,33 @@ import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/local/record_dao.dart';
 import 'package:simple_dyphic/service/firestore.dart';
 
-final recordRepositoryProvider = Provider((ref) => _RecordRepository(ref.read));
+final recordRepositoryProvider = Provider((ref) => _RecordRepository(ref));
 
 class _RecordRepository {
-  const _RecordRepository(this._read);
+  const _RecordRepository(this._ref);
 
-  final Reader _read;
+  final Ref _ref;
 
   Future<List<Record>> findAll() async {
-    return await _read(recordDaoProvider).findAll();
+    return await _ref.read(recordDaoProvider).findAll();
   }
 
   Future<Record> find(int id) async {
-    return await _read(recordDaoProvider).find(id);
+    return await _ref.read(recordDaoProvider).find(id);
   }
 
   Future<void> save(Record record) async {
-    await _read(recordDaoProvider).save(record);
+    await _ref.read(recordDaoProvider).save(record);
   }
 
   Future<void> restore() async {
-    final remoteRecords = await _read(firestoreProvider).findAll();
+    final remoteRecords = await _ref.read(firestoreProvider).findAll();
     AppLogger.d('リモートから取得したレコード件数: ${remoteRecords.length}');
-    await _read(recordDaoProvider).saveAll(remoteRecords);
+    await _ref.read(recordDaoProvider).saveAll(remoteRecords);
   }
 
   Future<void> backup() async {
     final records = await findAll();
-    await _read(firestoreProvider).saveAll(records);
+    await _ref.read(firestoreProvider).saveAll(records);
   }
 }

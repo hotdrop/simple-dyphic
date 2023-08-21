@@ -1,20 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/repository/account_repository.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
 
-final settingsViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _SettingsViewModel(ref.read));
+final settingsViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _SettingsViewModel(ref));
 final _packageInfoProvider = Provider((ref) => PackageInfo.fromPlatform());
 
 class _SettingsViewModel extends BaseViewModel {
-  _SettingsViewModel(this._read) {
+  _SettingsViewModel(this._ref) {
     _init();
   }
 
-  final Reader _read;
+  final Ref _ref;
 
   late String _appVersion;
   String get appVersion => _appVersion;
@@ -24,10 +24,10 @@ class _SettingsViewModel extends BaseViewModel {
   bool get loggedIn => _loginStatus == _LoginStatus.loggedIn;
 
   Future<void> _init() async {
-    final packageInfo = await _read(_packageInfoProvider);
-    _appVersion = packageInfo.version + '-' + packageInfo.buildNumber;
+    final packageInfo = await _ref.read(_packageInfoProvider);
+    _appVersion = '${packageInfo.version}-${packageInfo.buildNumber}';
 
-    final isLogin = _read(accountRepositoryProvider).isLogIn();
+    final isLogin = _ref.read(accountRepositoryProvider).isLogIn();
     if (isLogin) {
       _loginStatus = _LoginStatus.loggedIn;
     } else {
@@ -39,7 +39,7 @@ class _SettingsViewModel extends BaseViewModel {
 
   String getLoginUserName() {
     if (loggedIn) {
-      return _read(accountRepositoryProvider).userName() ?? R.res.strings.settingsLoginNameNotSettingLabel;
+      return _ref.read(accountRepositoryProvider).userName() ?? R.res.strings.settingsLoginNameNotSettingLabel;
     } else {
       return R.res.strings.settingsNotLoginNameLabel;
     }
@@ -47,7 +47,7 @@ class _SettingsViewModel extends BaseViewModel {
 
   String getLoginEmail() {
     if (loggedIn) {
-      return _read(accountRepositoryProvider).userEmail() ?? R.res.strings.settingsLoginEmailNotSettingLabel;
+      return _ref.read(accountRepositoryProvider).userEmail() ?? R.res.strings.settingsLoginEmailNotSettingLabel;
     } else {
       return R.res.strings.settingsNotLoginEmailLabel;
     }
@@ -55,14 +55,14 @@ class _SettingsViewModel extends BaseViewModel {
 
   Future<void> loginWithGoogle() async {
     nowLoading();
-    await _read(accountRepositoryProvider).login();
+    await _ref.read(accountRepositoryProvider).login();
     _loginStatus = _LoginStatus.loggedIn;
     onSuccess();
   }
 
   Future<void> logout() async {
     try {
-      await _read(accountRepositoryProvider).logout();
+      await _ref.read(accountRepositoryProvider).logout();
       _loginStatus = _LoginStatus.notLogin;
       notifyListeners();
     } catch (e, s) {
@@ -72,11 +72,11 @@ class _SettingsViewModel extends BaseViewModel {
   }
 
   Future<void> backup() async {
-    await _read(recordRepositoryProvider).backup();
+    await _ref.read(recordRepositoryProvider).backup();
   }
 
   Future<void> restore() async {
-    await _read(recordRepositoryProvider).restore();
+    await _ref.read(recordRepositoryProvider).restore();
   }
 }
 

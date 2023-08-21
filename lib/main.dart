@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -5,7 +6,10 @@ import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/res/app_theme.dart';
 import 'package:simple_dyphic/ui/main_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // TODO ここでFirebaseの初期化をする
+  await Firebase.initializeApp();
   R.init();
   runApp(const ProviderScope(child: App()));
 }

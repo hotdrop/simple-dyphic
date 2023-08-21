@@ -4,7 +4,7 @@ import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
 
-final calendarViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _CalendarViewModel(ref.read));
+final calendarViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _CalendarViewModel(ref));
 
 // 選択した日付の記録データ
 final calendarSelectedRecordStateProvider = StateProvider<Record>((ref) {
@@ -25,24 +25,24 @@ final calendarFocusDateStateProvider = StateProvider<DateTime>((_) {
 /// ViewModel
 ///
 class _CalendarViewModel extends BaseViewModel {
-  _CalendarViewModel(this._read) {
+  _CalendarViewModel(this._ref) {
     _init();
   }
 
-  final Reader _read;
+  final Ref _ref;
 
   final Map<int, Record> _recordsMap = {};
   Map<int, Record> get recordsMap => _recordsMap;
 
   Future<void> _init() async {
-    final records = await _read(recordRepositoryProvider).findAll();
+    final records = await _ref.read(recordRepositoryProvider).findAll();
 
     final nowDate = DateTime.now();
     for (var record in records) {
       _recordsMap[record.id] = record;
 
       if (record.isSameDay(nowDate)) {
-        _read(calendarSelectedRecordStateProvider.notifier).state = record;
+        _ref.read(calendarSelectedRecordStateProvider.notifier).state = record;
       }
     }
 
@@ -57,15 +57,15 @@ class _CalendarViewModel extends BaseViewModel {
 
   void onDaySelected(DateTime selectDate, {Record? selectedItem}) {
     final id = DyphicID.makeRecordId(selectDate);
-    _read(calendarSelectedRecordStateProvider.notifier).state = _recordsMap[id] ?? Record.createEmpty(selectDate);
-    _read(calendarFocusDateStateProvider.notifier).state = selectDate;
-    _read(calendarSelectedDateStateProvider.notifier).state = selectDate;
+    _ref.read(calendarSelectedRecordStateProvider.notifier).state = _recordsMap[id] ?? Record.createEmpty(selectDate);
+    _ref.read(calendarFocusDateStateProvider.notifier).state = selectDate;
+    _ref.read(calendarSelectedDateStateProvider.notifier).state = selectDate;
   }
 
   Future<void> refresh(int id) async {
-    final updateRecord = await _read(recordRepositoryProvider).find(id);
+    final updateRecord = await _ref.read(recordRepositoryProvider).find(id);
     _recordsMap[id] = updateRecord;
-    _read(calendarSelectedRecordStateProvider.notifier).state = updateRecord;
+    _ref.read(calendarSelectedRecordStateProvider.notifier).state = updateRecord;
     notifyListeners();
   }
 }

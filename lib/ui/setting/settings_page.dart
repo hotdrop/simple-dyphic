@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/model/app_settings.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/setting/settings_view_model.dart';
 import 'package:simple_dyphic/ui/widget/app_icon.dart';

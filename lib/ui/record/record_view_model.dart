@@ -5,12 +5,12 @@ import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
 
-final recordViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _RecordViewModel(ref.read));
+final recordViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _RecordViewModel(ref));
 
 class _RecordViewModel extends BaseViewModel {
-  _RecordViewModel(this._read);
+  _RecordViewModel(this._ref);
 
-  final Reader _read;
+  final Ref _ref;
 
   late InputRecord _inputRecord;
 
@@ -64,7 +64,7 @@ class _RecordViewModel extends BaseViewModel {
   Future<void> save() async {
     final record = _inputRecord.toRecord();
     AppLogger.d('レコードを保存します。key=${record.id}');
-    await _read(recordRepositoryProvider).save(record);
+    await _ref.read(recordRepositoryProvider).save(record);
   }
 }
 

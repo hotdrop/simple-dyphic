@@ -4,32 +4,32 @@ import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/service/firebase_auth.dart';
 
-final firestoreProvider = Provider((ref) => _Firestore(ref.read));
+final firestoreProvider = Provider((ref) => _Firestore(ref));
 final _firestore = Provider((ref) => FirebaseFirestore.instance);
 
 class _Firestore {
-  const _Firestore(this._read);
+  const _Firestore(this._ref);
 
-  static final String _rootCollection = 'dyphic';
-  static final String _recordRootCollection = 'records';
-  static final String _recordBreakFastField = 'breakfast';
-  static final String _recordLunchField = 'lunch';
-  static final String _recordDinnerField = 'dinner';
-  static final String _recordIsWalking = 'isWalking';
-  static final String _recordIsToilet = 'isToilet';
-  static final String _recordCondition = 'condition';
-  static final String _recordConditionMemoField = 'conditionMemo';
+  static const String _rootCollection = 'dyphic';
+  static const String _recordRootCollection = 'records';
+  static const String _recordBreakFastField = 'breakfast';
+  static const String _recordLunchField = 'lunch';
+  static const String _recordDinnerField = 'dinner';
+  static const String _recordIsWalking = 'isWalking';
+  static const String _recordIsToilet = 'isToilet';
+  static const String _recordCondition = 'condition';
+  static const String _recordConditionMemoField = 'conditionMemo';
 
-  final Reader _read;
+  final Ref _ref;
 
   Future<List<Record>> findAll() async {
     try {
-      final userId = _read(firebaseAuthProvider)?.uid;
+      final userId = _ref.read(firebaseAuthProvider)?.uid;
       if (userId == null) {
         AppLogger.d('未ログインなのでレコード情報は取得しません。');
         return [];
       }
-      final snapshot = await _read(_firestore).collection(_rootCollection).doc(userId).collection(_recordRootCollection).get();
+      final snapshot = await _ref.read(_firestore).collection(_rootCollection).doc(userId).collection(_recordRootCollection).get();
       return snapshot.docs.map((doc) {
         final map = doc.data();
         return Record.create(
@@ -50,16 +50,19 @@ class _Firestore {
   }
 
   Future<void> saveAll(List<Record> records) async {
-    final userId = _read(firebaseAuthProvider)?.uid;
+    final userId = _ref.read(firebaseAuthProvider)?.uid;
     if (userId == null) {
       AppLogger.d('未ログインなのでレコード情報は保存しません。');
       return;
     }
-    records.forEach((r) async => await _save(userId, r));
+
+    for (var record in records) {
+      await _save(userId, record);
+    }
   }
 
   Future<void> save(Record record) async {
-    final userId = _read(firebaseAuthProvider)?.uid;
+    final userId = _ref.read(firebaseAuthProvider)?.uid;
     if (userId == null) {
       AppLogger.d('未ログインなのでレコード情報は保存しません。');
       return;
