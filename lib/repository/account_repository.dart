@@ -8,24 +8,15 @@ class _AccountRepository {
 
   final Ref _ref;
 
-  bool isLogIn() {
-    final user = _ref.read(firebaseAuthProvider);
-    return user != null;
+  bool get isSignIn => _ref.read(firebaseAuthProvider).isLogin;
+  String? get userName => _ref.read(firebaseAuthProvider).userName;
+  String? get userEmail => _ref.read(firebaseAuthProvider).email;
+
+  Future<void> signIn() async {
+    await _ref.read(firebaseAuthProvider).signInWithGoogle();
   }
 
-  String? userName() {
-    return _ref.read(firebaseAuthProvider)?.displayName;
-  }
-
-  String? userEmail() {
-    return _ref.read(firebaseAuthProvider)?.email;
-  }
-
-  Future<void> login() async {
-    await _ref.read(firebaseAuthProvider.notifier).login();
-  }
-
-  Future<void> logout() async {
-    await _ref.read(firebaseAuthProvider.notifier).logout();
+  Future<void> signOut() async {
+    await _ref.read(firebaseAuthProvider).signOut();
   }
 }

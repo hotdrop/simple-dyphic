@@ -5,7 +5,6 @@ import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/service/firebase_auth.dart';
 
 final firestoreProvider = Provider((ref) => _Firestore(ref));
-final _firestore = Provider((ref) => FirebaseFirestore.instance);
 
 class _Firestore {
   const _Firestore(this._ref);
@@ -24,15 +23,22 @@ class _Firestore {
 
   Future<List<Record>> findAll() async {
     try {
-      final userId = _ref.read(firebaseAuthProvider)?.uid;
+      final userId = _ref.read(firebaseAuthProvider).userId;
       if (userId == null) {
         AppLogger.d('未ログインなのでレコード情報は取得しません。');
         return [];
       }
-      final snapshot = await _ref.read(_firestore).collection(_rootCollection).doc(userId).collection(_recordRootCollection).get();
-      return snapshot.docs.map((doc) {
+
+      final snapshot = await FirebaseFirestore.instance //
+          .collection(_rootCollection)
+          .doc(userId)
+          .collection(_recordRootCollection)
+          .get();
+
+      final records = <Record>[];
+      for (var doc in snapshot.docs) {
         final map = doc.data();
-        return Record.create(
+        final record = Record.create(
           id: int.parse(doc.id),
           breakfast: _getString(map, _recordBreakFastField),
           lunch: _getString(map, _recordLunchField),
@@ -42,7 +48,10 @@ class _Firestore {
           condition: _getString(map, _recordCondition),
           conditionMemo: _getString(map, _recordConditionMemoField),
         );
-      }).toList();
+        records.add(record);
+      }
+
+      return records;
     } on FirebaseException catch (e, s) {
       await AppLogger.e('Firestore: record情報の全件取得に失敗', e, s);
       rethrow;
@@ -50,7 +59,7 @@ class _Firestore {
   }
 
   Future<void> saveAll(List<Record> records) async {
-    final userId = _ref.read(firebaseAuthProvider)?.uid;
+    final userId = _ref.read(firebaseAuthProvider).userId;
     if (userId == null) {
       AppLogger.d('未ログインなのでレコード情報は保存しません。');
       return;
@@ -62,7 +71,7 @@ class _Firestore {
   }
 
   Future<void> save(Record record) async {
-    final userId = _ref.read(firebaseAuthProvider)?.uid;
+    final userId = _ref.read(firebaseAuthProvider).userId;
     if (userId == null) {
       AppLogger.d('未ログインなのでレコード情報は保存しません。');
       return;
@@ -93,7 +102,6 @@ class _Firestore {
     }
   }
 
-  // ここから下はMapとDocumentSnapshotから型情報ありで取りたい場合の便利メソッド
   String _getString(Map<String, dynamic>? map, String fieldName) {
     dynamic fieldVal = map?[fieldName] ?? 0;
     if (fieldVal is String) {
