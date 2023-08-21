@@ -1,13 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/repository/account_repository.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
 import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/base_view_model.dart';
 
-final settingsViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _SettingsViewModel(ref));
+part 'settings_provider.g.dart';
+
 final _packageInfoProvider = Provider((ref) => PackageInfo.fromPlatform());
+
+@riverpod
+class SettingsController extends _$SettingsController {
+  @override
+  Future<void> build() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    final isLogin = ref.read(accountRepositoryProvider).isLogIn();
+    // _appVersion = '${packageInfo.version}-${packageInfo.buildNumber}';
+
+    //
+    // if (isLogin) {
+    //   _loginStatus = _LoginStatus.loggedIn;
+    // } else {
+    //   _loginStatus = _LoginStatus.notLogin;
+    // }
+  }
+}
 
 class _SettingsViewModel extends BaseViewModel {
   _SettingsViewModel(this._ref) {
@@ -55,14 +74,14 @@ class _SettingsViewModel extends BaseViewModel {
 
   Future<void> loginWithGoogle() async {
     nowLoading();
-    await _ref.read(accountRepositoryProvider).login();
+    await _ref.read(accountRepositoryProvider).signIn();
     _loginStatus = _LoginStatus.loggedIn;
     onSuccess();
   }
 
   Future<void> logout() async {
     try {
-      await _ref.read(accountRepositoryProvider).logout();
+      await _ref.read(accountRepositoryProvider).signOut();
       _loginStatus = _LoginStatus.notLogin;
       notifyListeners();
     } catch (e, s) {
@@ -80,4 +99,49 @@ class _SettingsViewModel extends BaseViewModel {
   }
 }
 
-enum _LoginStatus { notLogin, loggedIn }
+final _uiStateProvider = StateProvider<_UiState>((ref) => _UiState.empty());
+
+class _UiState {
+  const _UiState({
+    required this.isLogin,
+    required this.appVersion,
+  });
+
+  factory _UiState.empty() {
+    return const _UiState(isLogin: false, appVersion: '');
+  }
+
+  final bool isLogin;
+  final String appVersion;
+
+  _UiState copyWith({bool? isLogin, String? appVersion}) {
+    return _UiState(
+      isLogin: isLogin ?? this.isLogin,
+      appVersion: appVersion ?? this.appVersion,
+    );
+  }
+}
+
+// アプリのバージョン情報
+final settingAppVersionProvider = Provider<String>((ref) {
+  return ref.watch(_uiStateProvider.select((value) => value.appVersion));
+});
+
+// ログインしているか？
+final settingIsLoginProvider = Provider<bool>((ref) {
+  return ref.watch(_uiStateProvider.select((value) => value.isLogin));
+});
+
+// ログインしているGoogleアカウントのメアド
+final accountEmailProvider = Provider<String>((ref) {
+  return ref.watch(settingIsLoginProvider)
+      ? ref.read(accountRepositoryProvider).userEmail() ?? R.res.strings.settingsLoginEmailNotSettingLabel
+      : R.res.strings.settingsLoginEmailNotSettingLabel;
+});
+
+// ログインしているGoogleアカウント名
+final accountUserNameProvider = Provider<String>((ref) {
+  return ref.watch(settingIsLoginProvider)
+      ? ref.read(accountRepositoryProvider).userName() ?? R.res.strings.settingsLoginNameNotSettingLabel
+      : R.res.strings.settingsLoginNameNotSettingLabel;
+});

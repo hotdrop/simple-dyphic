@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/colors.dart';
 
 class AppTheme {
   AppTheme._();
 
   static final ThemeData dark = ThemeData.dark().copyWith(
-    primaryColor: R.res.colors.primaryColor,
-    primaryColorDark: R.res.colors.accentColorDark,
+    primaryColor: AppColors.primaryColor,
+    primaryColorDark: AppColors.accentColorDark,
     scaffoldBackgroundColor: const Color(0xFF232323),
     applyElevationOverlayColor: true,
-    dividerColor: R.res.colors.accentColor,
+    dividerColor: AppColors.accentColor,
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        backgroundColor: R.res.colors.accentColor,
+        backgroundColor: AppColors.accentColor,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: R.res.colors.primaryColor,
+        backgroundColor: AppColors.primaryColor,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        backgroundColor: R.res.colors.accentColor,
+        backgroundColor: AppColors.accentColor,
       ),
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: R.res.colors.primaryColor,
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.primaryColor,
     ),
   );
 }

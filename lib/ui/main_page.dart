@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/calender/calendar_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_page.dart';
 
@@ -50,8 +50,8 @@ class _MainPageState extends State<MainPage> {
 }
 
 final _allDestinations = <Destination>[
-  Destination(R.res.strings.calenderPageTitle, Icons.calendar_today),
-  Destination(R.res.strings.settingsPageTitle, Icons.settings),
+  const Destination(Strings.calenderPageTitle, Icons.calendar_today),
+  const Destination(Strings.settingsPageTitle, Icons.settings),
 ];
 
 class Destination {

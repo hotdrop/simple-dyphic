@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/res/R.dart';
-import 'package:simple_dyphic/ui/setting/settings_view_model.dart';
+import 'package:simple_dyphic/ui/setting/settings_provider.dart';
 import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:simple_dyphic/ui/widget/app_progress_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
@@ -64,18 +64,6 @@ class SettingsPage extends ConsumerWidget {
       title: Text(viewModel.getLoginEmail(), style: TextStyle(fontSize: 12.0)),
       subtitle: Text(viewModel.getLoginUserName()),
       trailing: (viewModel.loggedIn) ? _logoutButton(context) : _loginButton(context),
-    );
-  }
-
-  Widget _rowSwitchTheme(BuildContext context) {
-    final isDarkMode = context.read(appSettingsProvider)!.isDarkMode;
-    return ListTile(
-      leading: ChangeThemeIcon(isDarkMode: isDarkMode, size: 30),
-      title: Text(R.res.strings.settingsChangeAppThemeLabel),
-      trailing: Switch(
-        onChanged: (isDark) => context.read(appSettingsProvider.notifier).saveThemeMode(isDark),
-        value: isDarkMode,
-      ),
     );
   }
 

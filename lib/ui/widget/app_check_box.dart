@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/strings.dart';
 
 class AppCheckBox extends StatefulWidget {
   const AppCheckBox._(this.isWalking, this.initValue, this.onChecked);
@@ -17,7 +17,7 @@ class AppCheckBox extends StatefulWidget {
   final Function(bool) onChecked;
 
   @override
-  _AppCheckBoxState createState() => _AppCheckBoxState();
+  State<AppCheckBox> createState() => _AppCheckBoxState();
 }
 
 class _AppCheckBoxState extends State<AppCheckBox> {
@@ -51,9 +51,9 @@ class _AppCheckBoxState extends State<AppCheckBox> {
 
   Widget _viewLabel() {
     if (widget.isWalking) {
-      return Text(R.res.strings.recordWalkingLabel, style: const TextStyle(fontSize: 20));
+      return const Text(Strings.recordWalkingLabel, style: TextStyle(fontSize: 20));
     } else {
-      return Text(R.res.strings.recordToileLabel, style: const TextStyle(fontSize: 20));
+      return const Text(Strings.recordToileLabel, style: TextStyle(fontSize: 20));
     }
   }
 }
