@@ -34,7 +34,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -42,8 +42,8 @@ android {
 
     defaultConfig {
         applicationId "jp.hotdrop.esdyphic"
-        minSdkVersion 23
-        targetSdkVersion 30
+        minSdkVersion 28
+        targetSdkVersion 33
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
