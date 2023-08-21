@@ -10,64 +10,69 @@ import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalenderPage extends StatelessWidget {
+class CalenderPage extends ConsumerWidget {
+  const CalenderPage({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uiState = ref.watch(calendarViewModelProvider).uiState;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(R.res.strings.calenderPageTitle),
       ),
-      body: Consumer(
-        builder: (context, watch, child) {
-          final uiState = watch(calendarViewModelProvider).uiState;
-          return uiState.when(
-            loading: () => _onLoading(),
-            success: () => _onSuccess(context),
-            error: (err) => _onError(context, '$err'),
+      body: uiState.when(
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        success: () {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: const [
+              _ViewCalendar(),
+              SizedBox(height: 8.0),
+              _ViewSelectedDayInfoCard(),
+            ],
+          );
+        },
+        error: (err) {
+          _processOnError(context, '$err');
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         },
       ),
     );
   }
 
-  Widget _onLoading() {
-    return Center(
-      child: const CircularProgressIndicator(),
-    );
-  }
-
-  Widget _onError(BuildContext context, String errMsg) {
+  void _processOnError(BuildContext context, String errMsg) {
     Future<void>.delayed(Duration.zero).then((_) {
       AppDialog.ok(message: errMsg).show(context);
     });
-    return Center(
-      child: const CircularProgressIndicator(),
-    );
   }
+}
 
-  Widget _onSuccess(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        _buildCalendar(context),
-        const SizedBox(height: 8.0),
-        _cardDailyRecord(context),
-      ],
-    );
-  }
+class _ViewCalendar extends ConsumerWidget {
+  const _ViewCalendar({Key? key}) : super(key: key);
 
-  Widget _buildCalendar(BuildContext context) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return TableCalendar<Record>(
       firstDay: DateTime(2020, 11, 1),
       lastDay: DateTime(2030, 12, 31),
-      focusedDay: context.read(calendarViewModelProvider).focusDate,
-      selectedDayPredicate: (date) => isSameDay(context.read(calendarViewModelProvider).selectedDate, date),
+      focusedDay: ref.watch(calendarFocusDateStateProvider),
+      selectedDayPredicate: (date) {
+        final selectedDate = ref.read(calendarSelectedDateStateProvider);
+        return isSameDay(selectedDate, date);
+      },
       rangeSelectionMode: RangeSelectionMode.disabled,
-      headerStyle: HeaderStyle(formatButtonVisible: false),
+      headerStyle: const HeaderStyle(formatButtonVisible: false),
       locale: 'ja_JP',
       daysOfWeekHeight: 18.0, // デフォルト値の16だと日本語で見切れるのでちょっとふやす
       calendarFormat: CalendarFormat.month,
-      eventLoader: context.read(calendarViewModelProvider).getRecordForDay,
+      eventLoader: ref.read(calendarViewModelProvider).getRecordForDay,
       calendarStyle: CalendarStyle(
         selectedDecoration: BoxDecoration(
           color: R.res.colors.selectCalender,
@@ -79,129 +84,207 @@ class CalenderPage extends StatelessWidget {
         ),
         outsideDaysVisible: false,
       ),
-      calendarBuilders: CalendarBuilders(markerBuilder: (context, date, events) => _buildMarker(events)),
+      calendarBuilders: CalendarBuilders(
+        markerBuilder: (context, date, events) => _ViewMarkers(events),
+      ),
       onDaySelected: (selectDate, focusDate) {
-        context.read(calendarViewModelProvider).onDaySelected(selectDate);
+        ref.read(calendarViewModelProvider).onDaySelected(selectDate);
       },
     );
   }
+}
 
-  ///
-  /// カレンダーの日付の下に表示するマーカーアイコンの処理
-  ///
-  Widget _buildMarker(List<Record> argRecords) {
+///
+/// カレンダーの日付の下に表示するマーカーアイコンの処理
+///
+class _ViewMarkers extends StatelessWidget {
+  const _ViewMarkers(this.records, {Key? key}) : super(key: key);
+
+  final List<Record> records;
+  static const double _calendarIconSize = 15;
+
+  @override
+  Widget build(BuildContext context) {
+    if (records.isNotEmpty) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _buildMarker(),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  List<Widget> _buildMarker() {
     final markers = <Widget>[];
 
-    if (argRecords.isEmpty) {
-      return SizedBox();
-    }
-
-    final record = argRecords.first;
-    final double calendarIconSize = 15;
+    final record = records.first;
 
     // 体調アイコン
     if (record.condition != null) {
-      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: calendarIconSize));
+      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
     } else {
-      markers.add(SizedBox(width: calendarIconSize));
+      markers.add(const SizedBox(width: _calendarIconSize));
     }
 
     // 排便マーク
     if (record.isToilet) {
-      markers.add(SizedBox(width: calendarIconSize, child: Text('💩')));
+      markers.add(const SizedBox(width: _calendarIconSize, child: Text('💩')));
     } else {
-      markers.add(SizedBox(width: calendarIconSize));
+      markers.add(const SizedBox(width: _calendarIconSize));
     }
 
     // ウォーキングマーク
     if (record.isWalking) {
-      markers.add(SizedBox(width: calendarIconSize, child: Text('🚶‍♀️')));
+      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🚶‍♀️')));
     } else {
-      markers.add(SizedBox(width: calendarIconSize));
+      markers.add(const SizedBox(width: _calendarIconSize));
     }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: markers,
-    );
+    return markers;
   }
+}
 
-  ///
-  /// タップした日付の記録情報をカレンダーの下に表示する
-  ///
-  Widget _cardDailyRecord(BuildContext context) {
+///
+/// タップした日付の記録情報をカレンダーの下に表示する
+///
+class _ViewSelectedDayInfoCard extends ConsumerWidget {
+  const _ViewSelectedDayInfoCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         elevation: 4.0,
         child: InkWell(
-          onTap: () async {
-            final selectedRecord = context.read(calendarViewModelProvider).selectedRecord;
-            final isUpdate = await RecordPage.start(context, selectedRecord);
-            AppLogger.d('記録ページから戻ってきました。${selectedRecord.id}の更新有無: $isUpdate');
-            if (isUpdate) {
-              context.read(calendarViewModelProvider).refresh(selectedRecord.id);
-            }
-          },
-          child: _viewSelectedRecordDetail(context),
+          onTap: () async => await _onTap(context, ref),
+          child: const _ViewContentsOnInfoCard(),
         ),
       ),
     );
   }
 
-  Widget _viewSelectedRecordDetail(BuildContext context) {
-    final selectedRecord = context.read(calendarViewModelProvider).selectedRecord;
-    return Container(
+  Future<void> _onTap(BuildContext context, WidgetRef ref) async {
+    final selectedRecord = ref.read(calendarSelectedRecordStateProvider);
+    final isUpdate = await RecordPage.start(context, selectedRecord);
+    AppLogger.d('記録ページから戻ってきました。${selectedRecord.id}の更新有無: $isUpdate');
+    if (isUpdate) {
+      ref.read(calendarViewModelProvider).refresh(selectedRecord.id);
+    }
+  }
+}
+
+class _ViewContentsOnInfoCard extends StatelessWidget {
+  const _ViewContentsOnInfoCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _viewTitleOnDetail(selectedRecord),
+            children: const [
+              _ViewHeaderOnInfoCard(),
               Divider(),
-              ..._viewContentsOnDetail(selectedRecord),
+              _ViewDetailOnInfoCard(),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _viewTitleOnDetail(Record selectedRecord) {
-    return Center(child: Text('${selectedRecord.showFormatDate()}'));
-  }
+class _ViewHeaderOnInfoCard extends ConsumerWidget {
+  const _ViewHeaderOnInfoCard({Key? key}) : super(key: key);
 
-  List<Widget> _viewContentsOnDetail(Record selectedRecord) {
-    List<Widget> widgets = [];
-
-    if (selectedRecord.notRegister()) {
-      widgets.add(Text(R.res.strings.calenderUnRegisterLabel));
-      return widgets;
-    }
-
-    final infoStr = selectedRecord.getInfoJoinStr();
-    if (infoStr.isNotEmpty) {
-      widgets.add(Text(infoStr));
-      widgets.add(SizedBox(height: 16));
-    }
-
-    final memo = selectedRecord.conditionMemo;
-    if (memo != null && memo.isNotEmpty) {
-      widgets.add(Text(R.res.strings.calenderDetailConditionMemoLabel));
-      widgets.add(_labelMemo(memo));
-    }
-
-    // 体調メモ
-    return widgets;
-  }
-
-  Widget _labelMemo(String memo) {
-    return Text(
-      '$memo',
-      maxLines: 10,
-      overflow: TextOverflow.ellipsis,
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dateStr = ref.watch(calendarSelectedRecordStateProvider).showFormatDate();
+    return Center(
+      child: Text(dateStr),
     );
+  }
+}
+
+class _ViewDetailOnInfoCard extends ConsumerWidget {
+  const _ViewDetailOnInfoCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isNotContents = ref.watch(calendarSelectedRecordStateProvider).notRegister();
+
+    if (isNotContents) {
+      return Text(R.res.strings.calenderUnRegisterLabel);
+    } else {
+      return Column(
+        children: const [
+          _ViewConditionOnInfoCard(),
+          _ViewMemoOnInfoCard(),
+        ],
+      );
+    }
+  }
+}
+
+class _ViewConditionOnInfoCard extends ConsumerWidget {
+  const _ViewConditionOnInfoCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final record = ref.watch(calendarSelectedRecordStateProvider);
+    final infoStr = _createLabel(record);
+
+    if (infoStr.isNotEmpty) {
+      return Column(
+        children: [
+          Text(infoStr),
+          const SizedBox(height: 16),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
+  String _createLabel(Record record) {
+    List<String> infos = [];
+
+    if (record.condition != null) {
+      infos.add('${R.res.strings.calenderDetailConditionLabel}${record.condition}');
+    }
+    if (record.isWalking) {
+      infos.add(R.res.strings.calenderDetailWalkingLabel);
+    }
+    if (record.isToilet) {
+      infos.add(R.res.strings.calenderDetailToiletLabel);
+    }
+    if (infos.isNotEmpty) {
+      return infos.join(R.res.strings.calenderDetailInfoSeparator);
+    }
+    return '';
+  }
+}
+
+class _ViewMemoOnInfoCard extends ConsumerWidget {
+  const _ViewMemoOnInfoCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final memo = ref.watch(calendarSelectedRecordStateProvider).conditionMemo;
+
+    if (memo != null && memo.isNotEmpty) {
+      return Column(
+        children: [
+          Text(R.res.strings.calenderDetailConditionMemoLabel),
+          Text(memo, maxLines: 10, overflow: TextOverflow.ellipsis),
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 }

@@ -6,6 +6,24 @@ import 'package:simple_dyphic/ui/base_view_model.dart';
 
 final calendarViewModelProvider = ChangeNotifierProvider.autoDispose((ref) => _CalendarViewModel(ref.read));
 
+// 選択した日付の記録データ
+final calendarSelectedRecordStateProvider = StateProvider<Record>((ref) {
+  return Record.createEmpty(DateTime.now());
+});
+
+// 選択した日付
+final calendarSelectedDateStateProvider = StateProvider<DateTime>((_) {
+  return DateTime.now();
+});
+
+// フォーカスが当たっている日付
+final calendarFocusDateStateProvider = StateProvider<DateTime>((_) {
+  return DateTime.now();
+});
+
+///
+/// ViewModel
+///
 class _CalendarViewModel extends BaseViewModel {
   _CalendarViewModel(this._read) {
     _init();
@@ -16,28 +34,17 @@ class _CalendarViewModel extends BaseViewModel {
   final Map<int, Record> _recordsMap = {};
   Map<int, Record> get recordsMap => _recordsMap;
 
-  late DateTime _selectedDate;
-  DateTime get selectedDate => _selectedDate;
-
-  late Record _selectedRecord;
-  Record get selectedRecord => _selectedRecord;
-
-  late DateTime _focusDate;
-  DateTime get focusDate => _focusDate;
-
   Future<void> _init() async {
     final records = await _read(recordRepositoryProvider).findAll();
-    _selectedRecord = Record.createEmpty(DateTime.now());
 
     final nowDate = DateTime.now();
-    records.forEach((record) {
+    for (var record in records) {
       _recordsMap[record.id] = record;
+
       if (record.isSameDay(nowDate)) {
-        _selectedRecord = record;
+        _read(calendarSelectedRecordStateProvider.notifier).state = record;
       }
-    });
-    _focusDate = nowDate;
-    _selectedDate = nowDate;
+    }
 
     onSuccess();
   }
@@ -50,16 +57,15 @@ class _CalendarViewModel extends BaseViewModel {
 
   void onDaySelected(DateTime selectDate, {Record? selectedItem}) {
     final id = DyphicID.makeRecordId(selectDate);
-    _selectedRecord = _recordsMap[id] ?? Record.createEmpty(selectDate);
-    _focusDate = selectDate;
-    _selectedDate = selectDate;
-    notifyListeners();
+    _read(calendarSelectedRecordStateProvider.notifier).state = _recordsMap[id] ?? Record.createEmpty(selectDate);
+    _read(calendarFocusDateStateProvider.notifier).state = selectDate;
+    _read(calendarSelectedDateStateProvider.notifier).state = selectDate;
   }
 
   Future<void> refresh(int id) async {
     final updateRecord = await _read(recordRepositoryProvider).find(id);
     _recordsMap[id] = updateRecord;
-    _selectedRecord = updateRecord;
+    _read(calendarSelectedRecordStateProvider.notifier).state = updateRecord;
     notifyListeners();
   }
 }

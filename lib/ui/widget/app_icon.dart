@@ -5,7 +5,7 @@ import 'package:simple_dyphic/model/record.dart';
 /// テーマ変更アイコン
 ///
 class ChangeThemeIcon extends StatelessWidget {
-  const ChangeThemeIcon({required this.isDarkMode, required this.size});
+  const ChangeThemeIcon({Key? key, required this.isDarkMode, required this.size}) : super(key: key);
 
   final bool isDarkMode;
   final double size;

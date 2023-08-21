@@ -7,43 +7,43 @@ import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:simple_dyphic/ui/widget/app_progress_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final uiState = ref.watch(settingsViewModelProvider).uiState;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(R.res.strings.settingsPageTitle),
       ),
-      body: Consumer(
-        builder: (context, watch, child) {
-          final uiState = watch(settingsViewModelProvider).uiState;
-          return uiState.when(
-            loading: () => _onLoading(),
-            success: () => _onSuccess(context),
-            error: (err) => _onError(context, '$err'),
+      body: uiState.when(
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        success: () => _onSuccess(context),
+        error: (err) {
+          _processOnError(context, '$err');
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         },
       ),
     );
   }
 
-  Widget _onLoading() {
-    return Center(
-      child: const CircularProgressIndicator(),
-    );
-  }
-
-  Widget _onError(BuildContext context, String errMsg) {
+  void _processOnError(BuildContext context, String errMsg) {
     Future<void>.delayed(Duration.zero).then((_) {
       AppDialog.ok(message: errMsg).show(context);
     });
-    return Center(
-      child: const CircularProgressIndicator(),
-    );
   }
 
-  Widget _onSuccess(BuildContext context) {
-    final loggedIn = context.read(settingsViewModelProvider).loggedIn;
+  Widget _onSuccess(BuildContext context, WidgetRef ref) {
+    final loggedIn = ref.read(settingsViewModelProvider).loggedIn;
+
     return ListView(
       children: [
         _rowAccountInfo(context),
