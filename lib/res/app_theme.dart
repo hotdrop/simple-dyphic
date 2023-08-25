@@ -20,10 +20,27 @@ class AppTheme {
         backgroundColor: AppColors.primaryColor,
       ),
     ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        backgroundColor: AppColors.accentColor,
-      ),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.primaryColor;
+        }
+        return null;
+      }),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return null;
+        }
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.primaryColor;
+        }
+        return null;
+      }),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primaryColor,

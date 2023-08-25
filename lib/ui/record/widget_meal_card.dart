@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/colors.dart';
+import 'package:simple_dyphic/res/images.dart';
 
 enum MealType { morning, lunch, dinner }
 
@@ -12,15 +13,15 @@ class MealCard extends StatelessWidget {
   );
 
   factory MealCard.breakfast({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.breakfast, R.res.colors.mealBreakFast, initValue, onChanged);
+    return MealCard._(Images.breakfastPath, AppColors.mealBreakFast, initValue, onChanged);
   }
 
   factory MealCard.lunch({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.lunch, R.res.colors.mealLunch, initValue, onChanged);
+    return MealCard._(Images.lunchPath, AppColors.mealLunch, initValue, onChanged);
   }
 
   factory MealCard.dinner({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.dinner, R.res.colors.mealDinner, initValue, onChanged);
+    return MealCard._(Images.dinnerPath, AppColors.mealDinner, initValue, onChanged);
   }
 
   final String _iconPath;
@@ -59,8 +60,8 @@ class MealCard extends StatelessWidget {
     return TextFormField(
       initialValue: _initValue,
       maxLines: 5,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(),
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
         labelStyle: TextStyle(fontSize: 14),
       ),
       onChanged: (String? v) {

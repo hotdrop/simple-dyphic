@@ -12,11 +12,11 @@ class _AccountRepository {
   String? get userName => _ref.read(firebaseAuthProvider).userName;
   String? get userEmail => _ref.read(firebaseAuthProvider).email;
 
-  Future<void> signIn() async {
+  Future<void> signInWithGoogle() async {
     await _ref.read(firebaseAuthProvider).signInWithGoogle();
   }
 
-  Future<void> signOut() async {
-    await _ref.read(firebaseAuthProvider).signOut();
+  Future<void> signOutWithGoogle() async {
+    await _ref.read(firebaseAuthProvider).signOutWithGoogle();
   }
 }

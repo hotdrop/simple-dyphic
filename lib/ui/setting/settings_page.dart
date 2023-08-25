@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/images.dart';
+import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/setting/settings_provider.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
 import 'package:simple_dyphic/ui/widget/app_progress_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 
@@ -11,26 +11,24 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(settingsViewModelProvider).uiState;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(R.res.strings.settingsPageTitle),
+        title: const Text(Strings.settingsPageTitle),
       ),
-      body: uiState.when(
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        success: () => _onSuccess(context),
-        error: (err) {
-          _processOnError(context, '$err');
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+      body: ref.watch(settingsControllerProvider).when(
+            data: (_) => const _ViewBody(),
+            error: (err, stackTrace) {
+              _processOnError(context, '$err');
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            loading: () {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
     );
   }
 
@@ -39,143 +37,189 @@ class SettingsPage extends ConsumerWidget {
       AppDialog.ok(message: errMsg).show(context);
     });
   }
+}
 
-  Widget _onSuccess(BuildContext context, WidgetRef ref) {
-    final loggedIn = ref.read(settingsViewModelProvider).loggedIn;
+class _ViewBody extends ConsumerWidget {
+  const _ViewBody();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSignIn = ref.watch(settingIsSignInProvider);
 
     return ListView(
       children: [
-        _rowAccountInfo(context),
-        if (!loggedIn) _loginDescriptionLabel(context),
+        const _RowAccountInfo(),
+        const _RowAppLicense(),
         const Divider(),
-        _rowSwitchTheme(context),
-        _rowLicense(context),
-        _rowAppVersion(context),
-        const Divider(),
-        if (loggedIn) ..._viewLoginMenu(context),
+        if (isSignIn) ...[
+          const _RowBackup(),
+          const _RowRestore(),
+          const Divider(),
+          const _SignOutButton(),
+        ],
+        if (!isSignIn) ...[
+          const _SignInButton(),
+        ],
       ],
     );
   }
+}
 
-  Widget _rowAccountInfo(BuildContext context) {
-    final viewModel = context.read(settingsViewModelProvider);
+class _RowAccountInfo extends ConsumerWidget {
+  const _RowAccountInfo();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      leading: Icon(Icons.account_circle, size: 50),
-      title: Text(viewModel.getLoginEmail(), style: TextStyle(fontSize: 12.0)),
-      subtitle: Text(viewModel.getLoginUserName()),
-      trailing: (viewModel.loggedIn) ? _logoutButton(context) : _loginButton(context),
+      leading: const Icon(Icons.account_circle, size: 32),
+      title: Text(ref.watch(accountUserNameProvider)),
+      subtitle: Text(ref.watch(accountEmailProvider)),
     );
   }
+}
 
-  Widget _rowLicense(BuildContext context) {
+class _RowAppLicense extends ConsumerWidget {
+  const _RowAppLicense();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      leading: Icon(Icons.note),
-      title: Text(R.res.strings.settingsLicenseLavel),
-      trailing: Icon(Icons.arrow_forward_ios),
+      leading: const Icon(Icons.note, size: 32),
+      title: const Text(Strings.settingsLicenseLavel),
+      trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
-        showLicensePage(context: context);
+        showLicensePage(
+          context: context,
+          applicationName: Strings.appTitle,
+          applicationVersion: ref.read(settingAppVersionProvider),
+          applicationIcon: Image.asset(Images.icAppPath, width: 50, height: 50),
+        );
       },
     );
   }
+}
 
-  Widget _rowAppVersion(BuildContext context) {
-    final appVersion = context.read(settingsViewModelProvider).appVersion;
+///
+/// データバックアップ
+///
+class _RowBackup extends ConsumerWidget {
+  const _RowBackup();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      leading: Icon(Icons.info, size: 30),
-      title: Text(R.res.strings.settingsAppVersionLabel),
-      trailing: Text(appVersion),
+      leading: const Icon(Icons.backup, size: 32),
+      title: const Text(Strings.settingsBackupLabel),
+      subtitle: const Text(Strings.settingsBackupDetailLabel),
+      onTap: () {
+        AppDialog.okAndCancel(
+          message: Strings.settingsBackupConfirmMessage,
+          onOk: () => _processBackUp(context, ref),
+        ).show(context);
+      },
     );
   }
 
-  Widget _loginButton(BuildContext context) {
-    final viewModel = context.read(settingsViewModelProvider);
-    return ElevatedButton(
-      onPressed: () {
-        viewModel.loginWithGoogle();
+  void _processBackUp(BuildContext context, WidgetRef ref) {
+    const progressDialog = AppProgressDialog<void>();
+    progressDialog.show(
+      context,
+      execute: ref.read(settingsControllerProvider.notifier).backup,
+      onSuccess: (_) => AppDialog.ok(message: Strings.settingsBackupSuccessMessage).show(context),
+      onError: (err) => AppDialog.ok(message: '$err').show(context),
+    );
+  }
+}
+
+///
+/// データ復元
+///
+class _RowRestore extends ConsumerWidget {
+  const _RowRestore();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      leading: const Icon(Icons.settings_backup_restore, size: 32),
+      title: const Text(Strings.settingsRestoreLabel),
+      subtitle: const Text(Strings.settingsRestoreDetailLabel),
+      onTap: () {
+        AppDialog.okAndCancel(
+          message: Strings.settingsRestoreConfirmMessage,
+          onOk: () => _processRestore(context, ref),
+        ).show(context);
       },
-      child: Text(R.res.strings.settingsLoginWithGoogle),
     );
   }
 
-  List<Widget> _viewLoginMenu(BuildContext context) {
-    return <Widget>[
-      ListTile(
-        leading: Icon(Icons.backup, size: 30),
-        title: Text(R.res.strings.settingsBackupLabel),
-        subtitle: Text(R.res.strings.settingsBackupDetailLabel),
-        onTap: () => _showBackupDialog(context),
-      ),
-      ListTile(
-        leading: Icon(Icons.restore, size: 30),
-        title: Text(R.res.strings.settingsRestoreLabel),
-        subtitle: Text(R.res.strings.settingsRestoreDetailLabel),
-        onTap: () => _showRestoreDialog(context),
-      ),
-    ];
+  void _processRestore(BuildContext context, WidgetRef ref) {
+    const progressDialog = AppProgressDialog<void>();
+    progressDialog.show(
+      context,
+      execute: ref.read(settingsControllerProvider.notifier).restore,
+      onSuccess: (_) => AppDialog.ok(message: Strings.settingsRestoreSuccessMessage).show(context),
+      onError: (err) => AppDialog.ok(message: '$err').show(context),
+    );
   }
+}
 
-  void _showBackupDialog(BuildContext context) {
-    AppDialog.okAndCancel(
-      message: R.res.strings.settingsBackupConfirmMessage,
-      onOk: () {
-        final dialog = AppProgressDialog<void>();
-        dialog.show(
-          context,
-          execute: context.read(settingsViewModelProvider).backup,
-          onSuccess: (_) {
-            AppDialog.ok(message: R.res.strings.settingsBackupSuccessMessage).show(context);
-          },
-          onError: (err) {
-            AppDialog.ok(message: '$err').show(context);
-          },
-        );
-      },
-    ).show(context);
-  }
+///
+/// サインインボタン
+///
+class _SignInButton extends ConsumerWidget {
+  const _SignInButton();
 
-  void _showRestoreDialog(BuildContext context) {
-    AppDialog.okAndCancel(
-      message: R.res.strings.settingsRestoreConfirmMessage,
-      onOk: () {
-        final dialog = AppProgressDialog<void>();
-        dialog.show(
-          context,
-          execute: context.read(settingsViewModelProvider).restore,
-          onSuccess: (_) {
-            AppDialog.ok(message: R.res.strings.settingsRestoreSuccessMessage).show(context);
-          },
-          onError: (err) {
-            AppDialog.ok(message: '$err').show(context);
-          },
-        );
-      },
-    ).show(context);
-  }
-
-  Widget _loginDescriptionLabel(BuildContext context) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Text(R.res.strings.settingsLoginInfo, style: Theme.of(context).textTheme.caption),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: ElevatedButton(
+        onPressed: () => _processSignIn(context, ref),
+        child: const Text(Strings.settingsLoginWithGoogle),
+      ),
     );
   }
 
-  Widget _logoutButton(BuildContext context) {
-    final viewModel = context.read(settingsViewModelProvider);
-    return OutlinedButton(
-      onPressed: () {
-        final dialog = AppProgressDialog<void>();
-        dialog.show(
-          context,
-          execute: viewModel.logout,
-          onSuccess: (_) {
-            // 成功時は何もしない
-          },
-          onError: (err) {
-            AppDialog.ok(message: '$err').show(context);
-          },
-        );
-      },
-      child: Text(R.res.strings.settingsLogoutLabel),
+  void _processSignIn(BuildContext context, WidgetRef ref) {
+    const progressDialog = AppProgressDialog<void>();
+    progressDialog.show(
+      context,
+      execute: ref.read(settingsControllerProvider.notifier).signInWithGoogle,
+      onSuccess: (_) {/* 成功時は何もしない */},
+      onError: (err) => AppDialog.ok(message: 'err').show(context),
+    );
+  }
+}
+
+///
+/// サインアウトボタン
+///
+class _SignOutButton extends ConsumerWidget {
+  const _SignOutButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: OutlinedButton(
+        child: const Text(Strings.settingsLogoutLabel),
+        onPressed: () {
+          AppDialog.okAndCancel(
+            message: Strings.settingsSignOutDialogMessage,
+            onOk: () => _processSignOut(context, ref),
+          ).show(context);
+        },
+      ),
+    );
+  }
+
+  void _processSignOut(BuildContext context, WidgetRef ref) {
+    const progressDialog = AppProgressDialog<void>();
+    progressDialog.show(
+      context,
+      execute: ref.read(settingsControllerProvider.notifier).signOutWithGoogle,
+      onSuccess: (_) {/* 成功時は何もしない */},
+      onError: (err) => AppDialog.ok(message: '$err').show(context),
     );
   }
 }

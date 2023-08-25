@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
+import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 
 class ConditionRadioGroup extends StatefulWidget {
   const ConditionRadioGroup({
@@ -14,7 +14,7 @@ class ConditionRadioGroup extends StatefulWidget {
   final Function(ConditionType) onSelected;
 
   @override
-  _ConditionRadioGroupState createState() => _ConditionRadioGroupState();
+  State<ConditionRadioGroup> createState() => _ConditionRadioGroupState();
 }
 
 class _ConditionRadioGroupState extends State<ConditionRadioGroup> {

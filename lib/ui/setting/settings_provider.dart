@@ -1,101 +1,49 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/repository/account_repository.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
-import 'package:simple_dyphic/res/R.dart';
-import 'package:simple_dyphic/ui/base_view_model.dart';
+import 'package:simple_dyphic/res/strings.dart';
 
 part 'settings_provider.g.dart';
-
-final _packageInfoProvider = Provider((ref) => PackageInfo.fromPlatform());
 
 @riverpod
 class SettingsController extends _$SettingsController {
   @override
   Future<void> build() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    final isLogin = ref.read(accountRepositoryProvider).isLogIn();
-    // _appVersion = '${packageInfo.version}-${packageInfo.buildNumber}';
+    final isSignIn = ref.read(accountRepositoryProvider).isSignIn;
 
-    //
-    // if (isLogin) {
-    //   _loginStatus = _LoginStatus.loggedIn;
-    // } else {
-    //   _loginStatus = _LoginStatus.notLogin;
-    // }
-  }
-}
-
-class _SettingsViewModel extends BaseViewModel {
-  _SettingsViewModel(this._ref) {
-    _init();
+    ref.read(_uiStateProvider.notifier).state = _UiState(
+      isSignIn: isSignIn,
+      appVersion: '${packageInfo.version}-${packageInfo.buildNumber}',
+    );
   }
 
-  final Ref _ref;
-
-  late String _appVersion;
-  String get appVersion => _appVersion;
-
-  // ステータス
-  _LoginStatus _loginStatus = _LoginStatus.notLogin;
-  bool get loggedIn => _loginStatus == _LoginStatus.loggedIn;
-
-  Future<void> _init() async {
-    final packageInfo = await _ref.read(_packageInfoProvider);
-    _appVersion = '${packageInfo.version}-${packageInfo.buildNumber}';
-
-    final isLogin = _ref.read(accountRepositoryProvider).isLogIn();
-    if (isLogin) {
-      _loginStatus = _LoginStatus.loggedIn;
-    } else {
-      _loginStatus = _LoginStatus.notLogin;
-    }
-
-    onSuccess();
+  Future<void> signInWithGoogle() async {
+    await ref.read(accountRepositoryProvider).signInWithGoogle();
+    ref.read(_uiStateProvider.notifier).update((state) {
+      return state.copyWith(
+        isSignIn: ref.read(accountRepositoryProvider).isSignIn,
+      );
+    });
   }
 
-  String getLoginUserName() {
-    if (loggedIn) {
-      return _ref.read(accountRepositoryProvider).userName() ?? R.res.strings.settingsLoginNameNotSettingLabel;
-    } else {
-      return R.res.strings.settingsNotLoginNameLabel;
-    }
-  }
-
-  String getLoginEmail() {
-    if (loggedIn) {
-      return _ref.read(accountRepositoryProvider).userEmail() ?? R.res.strings.settingsLoginEmailNotSettingLabel;
-    } else {
-      return R.res.strings.settingsNotLoginEmailLabel;
-    }
-  }
-
-  Future<void> loginWithGoogle() async {
-    nowLoading();
-    await _ref.read(accountRepositoryProvider).signIn();
-    _loginStatus = _LoginStatus.loggedIn;
-    onSuccess();
-  }
-
-  Future<void> logout() async {
-    try {
-      await _ref.read(accountRepositoryProvider).signOut();
-      _loginStatus = _LoginStatus.notLogin;
-      notifyListeners();
-    } catch (e, s) {
-      await AppLogger.e('ログアウトに失敗しました。', e, s);
-      rethrow;
-    }
+  Future<void> signOutWithGoogle() async {
+    await ref.read(accountRepositoryProvider).signOutWithGoogle();
+    ref.read(_uiStateProvider.notifier).update((state) {
+      return state.copyWith(
+        isSignIn: ref.read(accountRepositoryProvider).isSignIn,
+      );
+    });
   }
 
   Future<void> backup() async {
-    await _ref.read(recordRepositoryProvider).backup();
+    await ref.read(recordRepositoryProvider).backup();
   }
 
   Future<void> restore() async {
-    await _ref.read(recordRepositoryProvider).restore();
+    await ref.read(recordRepositoryProvider).restore();
   }
 }
 
@@ -103,20 +51,20 @@ final _uiStateProvider = StateProvider<_UiState>((ref) => _UiState.empty());
 
 class _UiState {
   const _UiState({
-    required this.isLogin,
+    required this.isSignIn,
     required this.appVersion,
   });
 
   factory _UiState.empty() {
-    return const _UiState(isLogin: false, appVersion: '');
+    return const _UiState(isSignIn: false, appVersion: '');
   }
 
-  final bool isLogin;
+  final bool isSignIn;
   final String appVersion;
 
-  _UiState copyWith({bool? isLogin, String? appVersion}) {
+  _UiState copyWith({bool? isSignIn, String? appVersion}) {
     return _UiState(
-      isLogin: isLogin ?? this.isLogin,
+      isSignIn: isSignIn ?? this.isSignIn,
       appVersion: appVersion ?? this.appVersion,
     );
   }
@@ -128,20 +76,20 @@ final settingAppVersionProvider = Provider<String>((ref) {
 });
 
 // ログインしているか？
-final settingIsLoginProvider = Provider<bool>((ref) {
-  return ref.watch(_uiStateProvider.select((value) => value.isLogin));
+final settingIsSignInProvider = Provider<bool>((ref) {
+  return ref.watch(_uiStateProvider.select((value) => value.isSignIn));
 });
 
 // ログインしているGoogleアカウントのメアド
 final accountEmailProvider = Provider<String>((ref) {
-  return ref.watch(settingIsLoginProvider)
-      ? ref.read(accountRepositoryProvider).userEmail() ?? R.res.strings.settingsLoginEmailNotSettingLabel
-      : R.res.strings.settingsLoginEmailNotSettingLabel;
+  return ref.watch(settingIsSignInProvider)
+      ? ref.read(accountRepositoryProvider).userEmail ?? Strings.settingsNotLoginNameLabel
+      : Strings.settingsNotLoginNameLabel;
 });
 
 // ログインしているGoogleアカウント名
 final accountUserNameProvider = Provider<String>((ref) {
-  return ref.watch(settingIsLoginProvider)
-      ? ref.read(accountRepositoryProvider).userName() ?? R.res.strings.settingsLoginNameNotSettingLabel
-      : R.res.strings.settingsLoginNameNotSettingLabel;
+  return ref.watch(settingIsSignInProvider)
+      ? ref.read(accountRepositoryProvider).userName ?? Strings.settingsNotLoginNameLabel
+      : Strings.settingsNotLoginNameLabel;
 });

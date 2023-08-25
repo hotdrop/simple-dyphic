@@ -44,7 +44,7 @@ class _FirebaseAuthProvider {
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOutWithGoogle() async {
     GoogleSignIn().disconnect();
     await FirebaseAuth.instance.signOut();
   }

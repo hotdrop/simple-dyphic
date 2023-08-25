@@ -1,15 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:simple_dyphic/initialize_provider.dart';
 import 'package:simple_dyphic/res/app_theme.dart';
 import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/main_page.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // TODO ここでFirebaseの初期化をする
-  await Firebase.initializeApp();
+void main() {
   runApp(const ProviderScope(child: App()));
 }
 
@@ -28,7 +25,45 @@ class App extends ConsumerWidget {
       title: Strings.appTitle,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
-      home: const MainPage(),
+      home: ref.watch(initializerProvider).when(
+            data: (_) => const MainPage(),
+            error: (error, stackTrace) => _ViewErrorScreen('$error'),
+            loading: () => const _ViewLoadingScreen(),
+          ),
+    );
+  }
+}
+
+class _ViewLoadingScreen extends StatelessWidget {
+  const _ViewLoadingScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(Strings.appTitle),
+      ),
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class _ViewErrorScreen extends StatelessWidget {
+  const _ViewErrorScreen(this.errorMessage);
+
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(Strings.appTitle),
+      ),
+      body: Center(
+        child: Text('エラーが発生しました。\n$errorMessage', style: const TextStyle(color: Colors.red)),
+      ),
     );
   }
 }

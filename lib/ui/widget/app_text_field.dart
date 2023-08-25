@@ -20,7 +20,7 @@ class MultiLineTextField extends StatefulWidget {
   final void Function(String) onChanged;
 
   @override
-  _MultiLineTextFieldState createState() => _MultiLineTextFieldState();
+  State<MultiLineTextField> createState() => _MultiLineTextFieldState();
 }
 
 class _MultiLineTextFieldState extends State<MultiLineTextField> {

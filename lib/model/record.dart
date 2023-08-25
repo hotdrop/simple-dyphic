@@ -80,26 +80,28 @@ class Condition {
   Condition._();
 
   static ConditionType? toType(String? condition) {
-    if (condition == Strings.conditionTypeBad) {
-      return ConditionType.bad;
-    } else if (condition == Strings.conditionTypeGood) {
-      return ConditionType.good;
-    } else if (condition == Strings.conditionTypeNormal) {
-      return ConditionType.normal;
-    } else {
-      return null;
+    switch (condition) {
+      case Strings.conditionTypeBad:
+        return ConditionType.bad;
+      case Strings.conditionTypeGood:
+        return ConditionType.good;
+      case Strings.conditionTypeNormal:
+        return ConditionType.normal;
+      default:
+        return null;
     }
   }
 
   static String? toStr(ConditionType? type) {
-    if (type == ConditionType.bad) {
-      return Strings.conditionTypeBad;
-    } else if (type == ConditionType.good) {
-      return Strings.conditionTypeGood;
-    } else if (type == ConditionType.normal) {
-      return Strings.conditionTypeNormal;
-    } else {
-      return null;
+    switch (type) {
+      case ConditionType.bad:
+        return Strings.conditionTypeBad;
+      case ConditionType.good:
+        return Strings.conditionTypeGood;
+      case ConditionType.normal:
+        return Strings.conditionTypeNormal;
+      default:
+        return null;
     }
   }
 }

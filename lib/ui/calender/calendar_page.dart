@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
+import 'package:simple_dyphic/res/colors.dart';
+import 'package:simple_dyphic/res/strings.dart';
 
-import 'package:simple_dyphic/ui/calender/calendar_view_model.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/ui/calender/calendar_provider.dart';
 import 'package:simple_dyphic/ui/record/record_page.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
+import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderPage extends ConsumerWidget {
@@ -15,35 +16,24 @@ class CalenderPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uiState = ref.watch(calendarViewModelProvider).uiState;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(R.res.strings.calenderPageTitle),
+        title: const Text(Strings.calenderPageTitle),
       ),
-      body: uiState.when(
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        success: () {
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            children: const [
-              _ViewCalendar(),
-              SizedBox(height: 8.0),
-              _ViewSelectedDayInfoCard(),
-            ],
-          );
-        },
-        error: (err) {
-          _processOnError(context, '$err');
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+      body: ref.watch(calendarControllerProvider).when(
+            data: (_) => const _ViewBody(),
+            error: (err, stackTrace) {
+              _processOnError(context, '$err');
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            loading: () {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
     );
   }
 
@@ -51,6 +41,22 @@ class CalenderPage extends ConsumerWidget {
     Future<void>.delayed(Duration.zero).then((_) {
       AppDialog.ok(message: errMsg).show(context);
     });
+  }
+}
+
+class _ViewBody extends StatelessWidget {
+  const _ViewBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _ViewCalendar(),
+        SizedBox(height: 8.0),
+        _ViewSelectedDayInfoCard(),
+      ],
+    );
   }
 }
 
@@ -72,10 +78,10 @@ class _ViewCalendar extends ConsumerWidget {
       locale: 'ja_JP',
       daysOfWeekHeight: 18.0, // デフォルト値の16だと日本語で見切れるのでちょっとふやす
       calendarFormat: CalendarFormat.month,
-      eventLoader: ref.read(calendarViewModelProvider).getRecordForDay,
+      eventLoader: ref.read(calendarControllerProvider.notifier).getRecordForDay,
       calendarStyle: CalendarStyle(
-        selectedDecoration: BoxDecoration(
-          color: R.res.colors.selectCalender,
+        selectedDecoration: const BoxDecoration(
+          color: AppColors.selectCalender,
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
@@ -88,7 +94,7 @@ class _ViewCalendar extends ConsumerWidget {
         markerBuilder: (context, date, events) => _ViewMarkers(events),
       ),
       onDaySelected: (selectDate, focusDate) {
-        ref.read(calendarViewModelProvider).onDaySelected(selectDate);
+        ref.read(calendarControllerProvider.notifier).onDaySelected(selectDate);
       },
     );
   }
@@ -169,7 +175,7 @@ class _ViewSelectedDayInfoCard extends ConsumerWidget {
     final isUpdate = await RecordPage.start(context, selectedRecord);
     AppLogger.d('記録ページから戻ってきました。${selectedRecord.id}の更新有無: $isUpdate');
     if (isUpdate) {
-      ref.read(calendarViewModelProvider).refresh(selectedRecord.id);
+      ref.read(calendarControllerProvider.notifier).refresh(selectedRecord.id);
     }
   }
 }
@@ -179,14 +185,14 @@ class _ViewContentsOnInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               _ViewHeaderOnInfoCard(),
               Divider(),
               _ViewDetailOnInfoCard(),
@@ -218,54 +224,15 @@ class _ViewDetailOnInfoCard extends ConsumerWidget {
     final isNotContents = ref.watch(calendarSelectedRecordStateProvider).notRegister();
 
     if (isNotContents) {
-      return Text(R.res.strings.calenderUnRegisterLabel);
+      return const Text('この日の記録は未登録です。\nここをタップして記録しましょう。');
     } else {
-      return Column(
-        children: const [
-          _ViewConditionOnInfoCard(),
+      return const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           _ViewMemoOnInfoCard(),
         ],
       );
     }
-  }
-}
-
-class _ViewConditionOnInfoCard extends ConsumerWidget {
-  const _ViewConditionOnInfoCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final record = ref.watch(calendarSelectedRecordStateProvider);
-    final infoStr = _createLabel(record);
-
-    if (infoStr.isNotEmpty) {
-      return Column(
-        children: [
-          Text(infoStr),
-          const SizedBox(height: 16),
-        ],
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
-
-  String _createLabel(Record record) {
-    List<String> infos = [];
-
-    if (record.condition != null) {
-      infos.add('${R.res.strings.calenderDetailConditionLabel}${record.condition}');
-    }
-    if (record.isWalking) {
-      infos.add(R.res.strings.calenderDetailWalkingLabel);
-    }
-    if (record.isToilet) {
-      infos.add(R.res.strings.calenderDetailToiletLabel);
-    }
-    if (infos.isNotEmpty) {
-      return infos.join(R.res.strings.calenderDetailInfoSeparator);
-    }
-    return '';
   }
 }
 
@@ -279,7 +246,7 @@ class _ViewMemoOnInfoCard extends ConsumerWidget {
     if (memo != null && memo.isNotEmpty) {
       return Column(
         children: [
-          Text(R.res.strings.calenderDetailConditionMemoLabel),
+          const Text('【体調メモ】'),
           Text(memo, maxLines: 10, overflow: TextOverflow.ellipsis),
         ],
       );

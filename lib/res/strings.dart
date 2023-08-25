@@ -6,12 +6,6 @@ class Strings {
   // カレンダー
   static const String calenderPageTitle = 'カレンダー';
   static const String calenderNoEvent = '予定なし';
-  static const String calenderUnRegisterLabel = 'この日の記録は未登録です。\nここをタップして記録しましょう。';
-  static const String calenderDetailConditionLabel = '体調: ';
-  static const String calenderDetailWalkingLabel = '散歩した';
-  static const String calenderDetailToiletLabel = '排便あり';
-  static const String calenderDetailInfoSeparator = '、';
-  static const String calenderDetailConditionMemoLabel = '【体調メモ】';
 
   // 記録ページ
   static const String recordPageTitleDateFormat = 'yyyy年MM月dd日';
@@ -26,15 +20,13 @@ class Strings {
 
   // 設定ページ
   static const String settingsPageTitle = '設定';
-  static const String settingsNotLoginEmailLabel = '未ログイン';
+  static const String settingsNotLoginEmailLabel = '未サインイン';
   static const String settingsNotLoginNameLabel = 'ー';
-  static const String settingsLoginInfo = '※Googleアカウントでログインできます。ログインするとデータのバックアップや復元ができます。';
-  static const String settingsLoginNameNotSettingLabel = '未設定';
-  static const String settingsLoginEmailNotSettingLabel = '未設定';
-  static const String settingsLoginWithGoogle = 'ログイン';
-  static const String settingsLogoutLabel = 'ログアウト';
-  static const String settingsLicenseLavel = 'ライセンス情報';
-  static const String settingsAppVersionLabel = 'アプリバージョン';
+  static const String settingsLoginInfo = '※Googleアカウントでサインインできます。サインインするとデータのバックアップや復元ができます。';
+  static const String settingsLoginWithGoogle = 'Googleアカウントでサインインする';
+  static const String settingsLogoutLabel = 'Googleアカウントからサインアウトする';
+  static const String settingsSignOutDialogMessage = 'Googleアカウントからサインアウトします。よろしいですか？';
+  static const String settingsLicenseLavel = 'バージョンとライセンス';
   static const String settingsBackupLabel = 'バックアップ';
   static const String settingsBackupDetailLabel = 'データをリモートにバックアップします。';
   static const String settingsBackupConfirmMessage = 'データをリモートにバックアップします。よろしいですか？';

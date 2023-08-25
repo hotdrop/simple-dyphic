@@ -4,17 +4,18 @@ import 'package:simple_dyphic/common/app_logger.dart';
 class AppProgressDialog<T> {
   const AppProgressDialog();
 
-  Future<void> show(
+  void show(
     BuildContext context, {
     required Future<T> Function() execute,
     required Function(T) onSuccess,
     required Function(Exception) onError,
-  }) async {
+  }) {
     _showProgressDialog(context);
     try {
-      final result = await execute();
-      Navigator.pop(context);
-      onSuccess(result);
+      execute().then((result) {
+        Navigator.pop(context);
+        onSuccess(result);
+      });
     } on Exception catch (e, s) {
       AppLogger.e('エラーが発生しました。', e, s);
       Navigator.pop(context);
