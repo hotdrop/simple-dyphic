@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/local/record_dao.dart';
 import 'package:simple_dyphic/service/firestore.dart';
@@ -25,7 +24,6 @@ class _RecordRepository {
 
   Future<void> restore() async {
     final remoteRecords = await _ref.read(firestoreProvider).findAll();
-    AppLogger.d('リモートから取得したレコード件数: ${remoteRecords.length}');
     await _ref.read(recordDaoProvider).saveAll(remoteRecords);
   }
 

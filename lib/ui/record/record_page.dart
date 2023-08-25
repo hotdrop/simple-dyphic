@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/model/record.dart';
-import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/record/record_provider.dart';
 import 'package:simple_dyphic/ui/record/widget_meal_card.dart';
 import 'package:simple_dyphic/ui/widget/app_check_box.dart';
@@ -29,7 +28,7 @@ class RecordPage extends ConsumerWidget {
         final isUpdate = ref.read(isUpdateRecordProvider);
         if (isUpdate) {
           AppDialog.okAndCancel(
-            message: Strings.recordCloseAttensionMessage,
+            message: '内容が更新されていますが、保存せずに閉じてよろしいですか？',
             onOk: () async {
               ref.read(recordControllerProvider.notifier).clear();
               Navigator.pop(context, false);
@@ -124,7 +123,7 @@ class _ViewCondition extends ConsumerWidget {
     return Column(
       children: [
         const Center(
-          child: Text(Strings.recordConditionOverview),
+          child: Text('今日の体調は？'),
         ),
         const SizedBox(height: 16),
         ConditionRadioGroup(
@@ -173,10 +172,10 @@ class _ViewConditionMemo extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: MultiLineTextField(
-        label: Strings.recordConditionMemoTitle,
+        label: '体調メモ',
         initValue: record.conditionMemo,
         limitLine: 7,
-        hintText: Strings.recordConditionMemoHint,
+        hintText: '細かい体調はこちらに記載しましょう！',
         onChanged: ref.read(recordControllerProvider.notifier).inputConditionMemo,
       ),
     );
@@ -201,7 +200,7 @@ class _ViewSaveButton extends ConsumerWidget {
         },
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
-          child: Text(Strings.recordSaveButton),
+          child: Text('保存する'),
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/strings.dart';
 
 class AppDialog {
   const AppDialog._(this._message, this._onOk, this._onCancel);
@@ -39,14 +38,14 @@ class AppDialog {
               Navigator.pop(context);
               _onCancel!.call();
             },
-            child: const Text(Strings.dialogCancel),
+            child: const Text('キャンセル'),
           ),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
             _onOk?.call();
           },
-          child: const Text(Strings.dialogOk),
+          child: const Text('OK'),
         ),
       ],
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/res/images.dart';
-import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/setting/settings_provider.dart';
 import 'package:simple_dyphic/ui/widget/app_progress_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
@@ -13,7 +12,7 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Strings.settingsPageTitle),
+        title: const Text('設定'),
       ),
       body: ref.watch(settingsControllerProvider).when(
             data: (_) => const _ViewBody(),
@@ -85,12 +84,12 @@ class _RowAppLicense extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       leading: const Icon(Icons.note, size: 32),
-      title: const Text(Strings.settingsLicenseLavel),
+      title: const Text('バージョンとライセンス'),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         showLicensePage(
           context: context,
-          applicationName: Strings.appTitle,
+          applicationName: '体調管理アプリ',
           applicationVersion: ref.read(settingAppVersionProvider),
           applicationIcon: Image.asset(Images.icAppPath, width: 50, height: 50),
         );
@@ -109,11 +108,11 @@ class _RowBackup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       leading: const Icon(Icons.backup, size: 32),
-      title: const Text(Strings.settingsBackupLabel),
-      subtitle: const Text(Strings.settingsBackupDetailLabel),
+      title: const Text('バックアップ'),
+      subtitle: const Text('データをリモートにバックアップします。'),
       onTap: () {
         AppDialog.okAndCancel(
-          message: Strings.settingsBackupConfirmMessage,
+          message: 'データをリモートにバックアップします。よろしいですか？',
           onOk: () => _processBackUp(context, ref),
         ).show(context);
       },
@@ -125,7 +124,7 @@ class _RowBackup extends ConsumerWidget {
     progressDialog.show(
       context,
       execute: ref.read(settingsControllerProvider.notifier).backup,
-      onSuccess: (_) => AppDialog.ok(message: Strings.settingsBackupSuccessMessage).show(context),
+      onSuccess: (_) => AppDialog.ok(message: 'バックアップが完了しました！').show(context),
       onError: (err) => AppDialog.ok(message: '$err').show(context),
     );
   }
@@ -141,11 +140,11 @@ class _RowRestore extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       leading: const Icon(Icons.settings_backup_restore, size: 32),
-      title: const Text(Strings.settingsRestoreLabel),
-      subtitle: const Text(Strings.settingsRestoreDetailLabel),
+      title: const Text('復元'),
+      subtitle: const Text('バックアップからデータを復元します。'),
       onTap: () {
         AppDialog.okAndCancel(
-          message: Strings.settingsRestoreConfirmMessage,
+          message: 'バックアップからデータを復元します。よろしいですか？\n注意！現在のデータは全て消えてしまいます。ご注意ください。',
           onOk: () => _processRestore(context, ref),
         ).show(context);
       },
@@ -157,7 +156,7 @@ class _RowRestore extends ConsumerWidget {
     progressDialog.show(
       context,
       execute: ref.read(settingsControllerProvider.notifier).restore,
-      onSuccess: (_) => AppDialog.ok(message: Strings.settingsRestoreSuccessMessage).show(context),
+      onSuccess: (_) => AppDialog.ok(message: '復元が完了しました！').show(context),
       onError: (err) => AppDialog.ok(message: '$err').show(context),
     );
   }
@@ -175,7 +174,7 @@ class _SignInButton extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ElevatedButton(
         onPressed: () => _processSignIn(context, ref),
-        child: const Text(Strings.settingsLoginWithGoogle),
+        child: const Text('Googleアカウントでサインインする'),
       ),
     );
   }
@@ -202,10 +201,10 @@ class _SignOutButton extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: OutlinedButton(
-        child: const Text(Strings.settingsLogoutLabel),
+        child: const Text('Googleアカウントからサインアウトする'),
         onPressed: () {
           AppDialog.okAndCancel(
-            message: Strings.settingsSignOutDialogMessage,
+            message: 'Googleアカウントからサインアウトします。よろしいですか？',
             onOk: () => _processSignOut(context, ref),
           ).show(context);
         },

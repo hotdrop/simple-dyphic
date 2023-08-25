@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:simple_dyphic/initialize_provider.dart';
 import 'package:simple_dyphic/res/app_theme.dart';
-import 'package:simple_dyphic/res/strings.dart';
 import 'package:simple_dyphic/ui/main_page.dart';
 
 void main() {
@@ -22,7 +21,7 @@ class App extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ja', '')],
-      title: Strings.appTitle,
+      title: '体調管理',
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.dark,
       home: ref.watch(initializerProvider).when(
@@ -41,7 +40,7 @@ class _ViewLoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Strings.appTitle),
+        title: const Text('体調管理'),
       ),
       body: const Center(
         child: CircularProgressIndicator(),
@@ -59,7 +58,7 @@ class _ViewErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Strings.appTitle),
+        title: const Text('体調管理'),
       ),
       body: Center(
         child: Text('エラーが発生しました。\n$errorMessage', style: const TextStyle(color: Colors.red)),

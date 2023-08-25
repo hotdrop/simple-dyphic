@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/colors.dart';
 
 class AppTheme {
   AppTheme._();
 
+  static const Color primaryColor = Colors.lightBlue;
+  static const Color primaryColorDark = Colors.blueAccent;
+  static const Color accentColor = Color(0xFF0000FF);
+  static const Color accentColorDark = Color(0xFF3333FF);
+
   static final ThemeData dark = ThemeData.dark().copyWith(
-    primaryColor: AppColors.primaryColor,
-    primaryColorDark: AppColors.accentColorDark,
+    primaryColor: primaryColor,
+    primaryColorDark: accentColorDark,
     scaffoldBackgroundColor: const Color(0xFF232323),
     applyElevationOverlayColor: true,
-    dividerColor: AppColors.accentColor,
+    dividerColor: accentColor,
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        backgroundColor: AppColors.accentColor,
+        backgroundColor: accentColor,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: primaryColor,
       ),
     ),
     checkboxTheme: CheckboxThemeData(
@@ -26,7 +30,7 @@ class AppTheme {
           return null;
         }
         if (states.contains(MaterialState.selected)) {
-          return AppColors.primaryColor;
+          return primaryColor;
         }
         return null;
       }),
@@ -37,13 +41,13 @@ class AppTheme {
           return null;
         }
         if (states.contains(MaterialState.selected)) {
-          return AppColors.primaryColor;
+          return primaryColor;
         }
         return null;
       }),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: AppColors.primaryColor,
+      backgroundColor: primaryColor,
     ),
   );
 }

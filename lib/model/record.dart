@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:simple_dyphic/model/dyphic_id.dart';
-import 'package:simple_dyphic/res/strings.dart';
 
 ///
 /// 記録情報を保持する
@@ -46,7 +45,7 @@ class Record {
   final String? conditionMemo;
 
   String showFormatDate() {
-    return DateFormat(Strings.recordPageTitleDateFormat).format(date);
+    return DateFormat('yyyy年MM月dd日').format(date);
   }
 
   bool isSameDay(DateTime targetAt) {
@@ -79,13 +78,17 @@ class Record {
 class Condition {
   Condition._();
 
+  static const String conditionTypeBad = '悪い';
+  static const String conditionTypeNormal = '普通';
+  static const String conditionTypeGood = '良い';
+
   static ConditionType? toType(String? condition) {
     switch (condition) {
-      case Strings.conditionTypeBad:
+      case conditionTypeBad:
         return ConditionType.bad;
-      case Strings.conditionTypeGood:
+      case conditionTypeGood:
         return ConditionType.good;
-      case Strings.conditionTypeNormal:
+      case conditionTypeNormal:
         return ConditionType.normal;
       default:
         return null;
@@ -95,11 +98,11 @@ class Condition {
   static String? toStr(ConditionType? type) {
     switch (type) {
       case ConditionType.bad:
-        return Strings.conditionTypeBad;
+        return conditionTypeBad;
       case ConditionType.good:
-        return Strings.conditionTypeGood;
+        return conditionTypeGood;
       case ConditionType.normal:
-        return Strings.conditionTypeNormal;
+        return conditionTypeNormal;
       default:
         return null;
     }

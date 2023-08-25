@@ -3,7 +3,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_dyphic/repository/account_repository.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
-import 'package:simple_dyphic/res/strings.dart';
 
 part 'settings_provider.g.dart';
 
@@ -82,14 +81,10 @@ final settingIsSignInProvider = Provider<bool>((ref) {
 
 // ログインしているGoogleアカウントのメアド
 final accountEmailProvider = Provider<String>((ref) {
-  return ref.watch(settingIsSignInProvider)
-      ? ref.read(accountRepositoryProvider).userEmail ?? Strings.settingsNotLoginNameLabel
-      : Strings.settingsNotLoginNameLabel;
+  return ref.watch(settingIsSignInProvider) ? ref.read(accountRepositoryProvider).userEmail ?? 'ー' : 'ー';
 });
 
 // ログインしているGoogleアカウント名
 final accountUserNameProvider = Provider<String>((ref) {
-  return ref.watch(settingIsSignInProvider)
-      ? ref.read(accountRepositoryProvider).userName ?? Strings.settingsNotLoginNameLabel
-      : Strings.settingsNotLoginNameLabel;
+  return ref.watch(settingIsSignInProvider) ? ref.read(accountRepositoryProvider).userName ?? 'ー' : 'ー';
 });

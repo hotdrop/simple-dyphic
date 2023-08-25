@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/colors.dart';
 import 'package:simple_dyphic/res/images.dart';
 
 enum MealType { morning, lunch, dinner }
@@ -13,15 +12,15 @@ class MealCard extends StatelessWidget {
   );
 
   factory MealCard.breakfast({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(Images.breakfastPath, AppColors.mealBreakFast, initValue, onChanged);
+    return MealCard._(Images.breakfastPath, const Color(0xFFFA6B72), initValue, onChanged);
   }
 
   factory MealCard.lunch({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(Images.lunchPath, AppColors.mealLunch, initValue, onChanged);
+    return MealCard._(Images.lunchPath, const Color(0xFFFCA41F), initValue, onChanged);
   }
 
   factory MealCard.dinner({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(Images.dinnerPath, AppColors.mealDinner, initValue, onChanged);
+    return MealCard._(Images.dinnerPath, const Color(0xFF3D2EAD), initValue, onChanged);
   }
 
   final String _iconPath;

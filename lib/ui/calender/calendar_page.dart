@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
-import 'package:simple_dyphic/res/colors.dart';
-import 'package:simple_dyphic/res/strings.dart';
 
 import 'package:simple_dyphic/ui/calender/calendar_provider.dart';
 import 'package:simple_dyphic/ui/record/record_page.dart';
@@ -18,7 +16,7 @@ class CalenderPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Strings.calenderPageTitle),
+        title: const Text('カレンダー'),
       ),
       body: ref.watch(calendarControllerProvider).when(
             data: (_) => const _ViewBody(),
@@ -81,7 +79,7 @@ class _ViewCalendar extends ConsumerWidget {
       eventLoader: ref.read(calendarControllerProvider.notifier).getRecordForDay,
       calendarStyle: CalendarStyle(
         selectedDecoration: const BoxDecoration(
-          color: AppColors.selectCalender,
+          color: Color(0xFF66CCFF),
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(

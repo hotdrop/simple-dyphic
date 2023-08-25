@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/strings.dart';
 
 class AppCheckBox extends StatefulWidget {
   const AppCheckBox._(this.isWalking, this.initValue, this.onChecked);
@@ -51,9 +50,9 @@ class _AppCheckBoxState extends State<AppCheckBox> {
 
   Widget _viewLabel() {
     if (widget.isWalking) {
-      return const Text(Strings.recordWalkingLabel, style: TextStyle(fontSize: 20));
+      return const Text('🚶‍♀️散歩した', style: TextStyle(fontSize: 20));
     } else {
-      return const Text(Strings.recordToileLabel, style: TextStyle(fontSize: 20));
+      return const Text('💩排便した', style: TextStyle(fontSize: 20));
     }
   }
 }
