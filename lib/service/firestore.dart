@@ -14,7 +14,7 @@ class _Firestore {
   static const String _recordBreakFastField = 'breakfast';
   static const String _recordLunchField = 'lunch';
   static const String _recordDinnerField = 'dinner';
-  static const String _recordIsWalking = 'isWalking';
+  static const String _recordIsExercise = 'isWalking'; // フィールド名は旧名を利用
   static const String _recordIsToilet = 'isToilet';
   static const String _recordCondition = 'condition';
   static const String _recordConditionMemoField = 'conditionMemo';
@@ -43,7 +43,7 @@ class _Firestore {
           breakfast: _getString(map, _recordBreakFastField),
           lunch: _getString(map, _recordLunchField),
           dinner: _getString(map, _recordDinnerField),
-          isWalking: _getBool(map, _recordIsWalking),
+          isExercise: _getBool(map, _recordIsExercise),
           isToilet: _getBool(map, _recordIsToilet),
           condition: _getString(map, _recordCondition),
           conditionMemo: _getString(map, _recordConditionMemoField),
@@ -76,7 +76,7 @@ class _Firestore {
       if (record.breakfast != null) map[_recordBreakFastField] = record.breakfast;
       if (record.lunch != null) map[_recordLunchField] = record.lunch;
       if (record.dinner != null) map[_recordDinnerField] = record.dinner;
-      map[_recordIsWalking] = record.isWalking;
+      map[_recordIsExercise] = record.isExercise;
       map[_recordIsToilet] = record.isToilet;
       if (record.condition != null) map[_recordCondition] = record.condition;
       if (record.conditionMemo != null) map[_recordConditionMemoField] = record.conditionMemo;

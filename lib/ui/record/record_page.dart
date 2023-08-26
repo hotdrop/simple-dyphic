@@ -137,10 +137,10 @@ class _ViewDayActionCheck extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        AppCheckBox.walking(
-          initValue: record.isWalking,
+        AppCheckBox.exercise(
+          initValue: record.isExercise,
           onChecked: (bool isCheck) {
-            ref.read(recordControllerProvider.notifier).inputIsWalking(isCheck);
+            ref.read(recordControllerProvider.notifier).inputIsExercise(isCheck);
           },
         ),
         AppCheckBox.toilet(

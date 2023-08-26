@@ -38,9 +38,9 @@ class RecordController extends _$RecordController {
     }
   }
 
-  Future<void> inputIsWalking(bool isCheck) async {
+  Future<void> inputIsExercise(bool isCheck) async {
     ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
-          isWalking: isCheck,
+          isExercise: isCheck,
           isUpdate: true,
         ));
   }
@@ -89,7 +89,7 @@ class _UiState {
     this.breakfast,
     this.lunch,
     this.dinner,
-    this.isWalking,
+    this.isExercise,
     this.isToilet,
     this.conditionType,
     this.conditionMemo,
@@ -99,7 +99,7 @@ class _UiState {
   String? breakfast;
   String? lunch;
   String? dinner;
-  bool? isWalking;
+  bool? isExercise;
   bool? isToilet;
   ConditionType? conditionType;
   String? conditionMemo;
@@ -109,7 +109,7 @@ class _UiState {
     String? breakfast,
     String? lunch,
     String? dinner,
-    bool? isWalking,
+    bool? isExercise,
     bool? isToilet,
     ConditionType? conditionType,
     String? conditionMemo,
@@ -119,7 +119,7 @@ class _UiState {
       breakfast: breakfast ?? this.breakfast,
       lunch: lunch ?? this.lunch,
       dinner: dinner ?? this.dinner,
-      isWalking: isWalking ?? this.isWalking,
+      isExercise: isExercise ?? this.isExercise,
       isToilet: isToilet ?? this.isToilet,
       conditionType: conditionType ?? this.conditionType,
       conditionMemo: conditionMemo ?? this.conditionMemo,
@@ -133,7 +133,7 @@ class _UiState {
       breakfast: breakfast ?? record.breakfast,
       lunch: lunch ?? record.lunch,
       dinner: dinner ?? record.dinner,
-      isWalking: isWalking ?? record.isWalking,
+      isExercise: isExercise ?? record.isExercise,
       isToilet: isToilet ?? record.isToilet,
       condition: conditionType != null ? Condition.toStr(conditionType) : record.condition,
       conditionMemo: conditionMemo ?? record.conditionMemo,
