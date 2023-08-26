@@ -16,7 +16,7 @@ dependencies:
 
   # design
   flutter_riverpod: ^2.3.7
-  riverpod_annotation: ^2.1.1
+  riverpod_annotation: ^2.1.2
 
   # ui
   table_calendar: ^3.0.9
