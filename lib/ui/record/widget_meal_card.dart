@@ -31,7 +31,7 @@ class MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 140,
+      width: 180,
       child: Card(
         shadowColor: _shadowColor,
         elevation: 4.0,
@@ -39,33 +39,24 @@ class MealCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _titleIcon(),
-              _editField(context),
+            children: [
+              Center(
+                child: Image.asset(_iconPath),
+              ),
+              TextFormField(
+                initialValue: _initValue,
+                maxLines: 8,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (String? v) {
+                  _onChanged(v);
+                },
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _titleIcon() {
-    return Center(
-      child: Image.asset(_iconPath),
-    );
-  }
-
-  Widget _editField(BuildContext context) {
-    return TextFormField(
-      initialValue: _initValue,
-      maxLines: 5,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelStyle: TextStyle(fontSize: 14),
-      ),
-      onChanged: (String? v) {
-        _onChanged(v);
-      },
     );
   }
 }

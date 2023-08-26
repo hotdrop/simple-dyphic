@@ -25,9 +25,9 @@ class CalendarController extends _$CalendarController {
     ref.read(calendarRecordsMapStateProvder.notifier).state = recordsMap;
   }
 
-  List<Record> getRecordForDay(DateTime date) {
+  List<Record> getRecordForDay(Map<int, Record> mapData, DateTime date) {
     final id = DyphicID.makeRecordId(date);
-    final event = ref.read(calendarRecordsMapStateProvder)[id];
+    final event = mapData[id];
     return event != null ? [event] : [];
   }
 

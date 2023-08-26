@@ -59,7 +59,7 @@ class _ViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0, bottom: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: ListView(
         children: [
           _ViewMealArea(record),
@@ -86,7 +86,7 @@ class _ViewMealArea extends ConsumerWidget {
     return Column(
       children: [
         SizedBox(
-          height: 200,
+          height: 250,
           width: double.infinity,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -120,17 +120,9 @@ class _ViewCondition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        const Center(
-          child: Text('今日の体調は？'),
-        ),
-        const SizedBox(height: 16),
-        ConditionRadioGroup(
-          initSelectValue: record.getConditionType(),
-          onSelected: (newVal) => ref.read(recordControllerProvider.notifier).selectCondition(newVal),
-        ),
-      ],
+    return ConditionRadioGroup(
+      initSelectValue: record.getConditionType(),
+      onSelected: (newVal) => ref.read(recordControllerProvider.notifier).selectCondition(newVal),
     );
   }
 }

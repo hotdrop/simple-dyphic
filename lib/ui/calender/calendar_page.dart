@@ -63,6 +63,8 @@ class _ViewCalendar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final datamap = ref.watch(calendarRecordsMapStateProvder);
+
     return TableCalendar<Record>(
       firstDay: DateTime(2020, 11, 1),
       lastDay: DateTime(2030, 12, 31),
@@ -76,7 +78,9 @@ class _ViewCalendar extends ConsumerWidget {
       locale: 'ja_JP',
       daysOfWeekHeight: 18.0, // デフォルト値の16だと日本語で見切れるのでちょっとふやす
       calendarFormat: CalendarFormat.month,
-      eventLoader: ref.read(calendarControllerProvider.notifier).getRecordForDay,
+      eventLoader: (dateTime) {
+        return ref.read(calendarControllerProvider.notifier).getRecordForDay(datamap, dateTime);
+      },
       calendarStyle: CalendarStyle(
         selectedDecoration: const BoxDecoration(
           color: Color(0xFF66CCFF),

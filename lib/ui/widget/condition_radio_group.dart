@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 
@@ -42,7 +41,6 @@ class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
           value: type,
           groupValue: _selectType,
           onChanged: (ConditionType? newVal) {
-            AppLogger.d('選択した値は ${Condition.toStr(newVal)}');
             if (newVal != null) {
               setState(() {
                 _selectType = newVal;
