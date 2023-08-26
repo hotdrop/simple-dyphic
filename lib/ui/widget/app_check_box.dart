@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppCheckBox extends StatefulWidget {
-  const AppCheckBox._(this.isWalking, this.initValue, this.onChecked);
+  const AppCheckBox._(this.isExercise, this.initValue, this.onChecked);
 
-  factory AppCheckBox.walking({required bool initValue, required Function(bool) onChecked}) {
+  factory AppCheckBox.exercise({required bool initValue, required Function(bool) onChecked}) {
     return AppCheckBox._(true, initValue, onChecked);
   }
 
@@ -11,7 +11,7 @@ class AppCheckBox extends StatefulWidget {
     return AppCheckBox._(false, initValue, onChecked);
   }
 
-  final bool isWalking;
+  final bool isExercise;
   final bool initValue;
   final Function(bool) onChecked;
 
@@ -49,8 +49,8 @@ class _AppCheckBoxState extends State<AppCheckBox> {
   }
 
   Widget _viewLabel() {
-    if (widget.isWalking) {
-      return const Text('🚶‍♀️散歩した', style: TextStyle(fontSize: 20));
+    if (widget.isExercise) {
+      return const Text('🏃‍♂️運動した', style: TextStyle(fontSize: 20));
     } else {
       return const Text('💩排便した', style: TextStyle(fontSize: 20));
     }

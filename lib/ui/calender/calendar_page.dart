@@ -128,23 +128,20 @@ class _ViewMarkers extends StatelessWidget {
 
     final record = records.first;
 
-    // 体調アイコン
     if (record.condition != null) {
       markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
-    // 排便マーク
     if (record.isToilet) {
       markers.add(const SizedBox(width: _calendarIconSize, child: Text('💩')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
-    // ウォーキングマーク
-    if (record.isWalking) {
-      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🚶‍♀️')));
+    if (record.isExercise) {
+      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🏃‍♂️')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
