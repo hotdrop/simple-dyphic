@@ -1,55 +1,51 @@
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 
-final firebaseAuthProvider = StateNotifierProvider<_FirebaseAuthNotifier, User?>((ref) => _FirebaseAuthNotifier(null));
+final firebaseAuthProvider = Provider((ref) => _FirebaseAuthProvider());
 
-class _FirebaseAuthNotifier extends StateNotifier<User?> {
-  _FirebaseAuthNotifier(User? state) : super(state);
+class _FirebaseAuthProvider {
+  bool get isLogin => FirebaseAuth.instance.currentUser != null;
 
-  Future<void> init() async {
-    if (state != null) {
-      return;
-    }
-    await Firebase.initializeApp();
-    state = FirebaseAuth.instance.currentUser;
-  }
+  String? get userId => FirebaseAuth.instance.currentUser?.uid;
+  String? get userName => FirebaseAuth.instance.currentUser?.displayName;
+  String? get email => FirebaseAuth.instance.currentUser?.email;
 
-  String? get userId => state?.uid;
-
-  Future<void> login() async {
-    User? currentUser = state ?? FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      AppLogger.d('Googleアカウントのサインイン: 既にユーザー情報が保持できているのでサインイン完了');
-      return;
-    }
-
-    AppLogger.d('Googleアカウントのサインイン: ユーザー情報がないのでGoogleアカウントでサインインします　');
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) {
-      return;
-    }
-
+  Future<void> signInWithGoogle() async {
     try {
+      if (isLogin) {
+        AppLogger.d('既にサインイン済なので何もせず終了');
+        return;
+      }
+
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        // サインインをキャンセルした場合はそのまま終了
+        AppLogger.d('サインイン処理がキャンセルされたので終了');
+        return;
+      }
+
       final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      state = authResult.user;
-      AppLogger.d('Googleアカウントのサインイン: サインイン完了');
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      AppLogger.d('サインイン処理完了');
     } on PlatformException catch (e, s) {
-      await AppLogger.e('FirebaseAuth: ログイン処理でエラー code=${e.code}', e, s);
+      await AppLogger.e('FirebaseAuth: サインイン処理でエラー code=${e.code}', e, s);
       rethrow;
     } on FirebaseAuthException catch (e, s) {
-      await AppLogger.e('FirebaseAuth: ログイン処理でエラー code=${e.code}', e, s);
+      await AppLogger.e('FirebaseAuth: サインイン処理でエラー code=${e.code}', e, s);
       rethrow;
     }
   }
 
-  Future<void> logout() async {
+  Future<void> signOutWithGoogle() async {
+    GoogleSignIn().disconnect();
     await FirebaseAuth.instance.signOut();
-    state = null;
   }
 }

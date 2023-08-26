@@ -1,47 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/res/R.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:simple_dyphic/initialize_provider.dart';
 import 'package:simple_dyphic/res/app_theme.dart';
-import 'package:simple_dyphic/model/app_settings.dart';
 import 'package:simple_dyphic/ui/main_page.dart';
 
 void main() {
-  R.init();
-  runApp(ProviderScope(child: App()));
+  runApp(const ProviderScope(child: App()));
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
+  const App({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, watch, child) {
-      final state = watch(appSettingsProvider);
-      if (state != null) {
-        return MaterialApp(
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: [Locale('ja', '')],
-          title: R.res.strings.appTitle,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: MainPage(),
-        );
-      } else {
-        return _SplashScreen();
-      }
-    });
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('ja', '')],
+      title: '体調管理',
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.dark,
+      home: ref.watch(initializerProvider).when(
+            data: (_) => const MainPage(),
+            error: (error, stackTrace) => _ViewErrorScreen('$error'),
+            loading: () => const _ViewLoadingScreen(),
+          ),
+    );
   }
 }
 
-class _SplashScreen extends StatelessWidget {
+class _ViewLoadingScreen extends StatelessWidget {
+  const _ViewLoadingScreen();
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('体調管理'),
+      ),
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+class _ViewErrorScreen extends StatelessWidget {
+  const _ViewErrorScreen(this.errorMessage);
+
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('体調管理'),
+      ),
+      body: Center(
+        child: Text('エラーが発生しました。\n$errorMessage', style: const TextStyle(color: Colors.red)),
+      ),
     );
   }
 }

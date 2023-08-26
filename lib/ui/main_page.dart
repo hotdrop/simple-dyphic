@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
 import 'package:simple_dyphic/ui/calender/calendar_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_page.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
@@ -14,8 +15,8 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(child: _menuView(_currentIdx)),
+      body: Center(
+        child: _menuView(_currentIdx),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIdx,
@@ -40,16 +41,16 @@ class _MainPageState extends State<MainPage> {
   Widget _menuView(int index) {
     switch (index) {
       case 0:
-        return CalenderPage();
+        return const CalenderPage();
       default:
-        return SettingsPage();
+        return const SettingsPage();
     }
   }
 }
 
 final _allDestinations = <Destination>[
-  Destination(R.res.strings.calenderPageTitle, Icons.calendar_today),
-  Destination(R.res.strings.settingsPageTitle, Icons.settings),
+  const Destination('カレンダー', Icons.calendar_today),
+  const Destination('設定', Icons.settings),
 ];
 
 class Destination {

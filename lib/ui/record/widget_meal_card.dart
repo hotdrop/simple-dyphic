@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/res/R.dart';
+import 'package:simple_dyphic/res/images.dart';
 
 enum MealType { morning, lunch, dinner }
 
@@ -12,15 +12,15 @@ class MealCard extends StatelessWidget {
   );
 
   factory MealCard.breakfast({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.breakfast, R.res.colors.mealBreakFast, initValue, onChanged);
+    return MealCard._(Images.breakfastPath, const Color(0xFFFA6B72), initValue, onChanged);
   }
 
   factory MealCard.lunch({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.lunch, R.res.colors.mealLunch, initValue, onChanged);
+    return MealCard._(Images.lunchPath, const Color(0xFFFCA41F), initValue, onChanged);
   }
 
   factory MealCard.dinner({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(R.res.images.dinner, R.res.colors.mealDinner, initValue, onChanged);
+    return MealCard._(Images.dinnerPath, const Color(0xFF3D2EAD), initValue, onChanged);
   }
 
   final String _iconPath;
@@ -31,7 +31,7 @@ class MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 140,
+      width: 180,
       child: Card(
         shadowColor: _shadowColor,
         elevation: 4.0,
@@ -39,33 +39,24 @@ class MealCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _titleIcon(),
-              _editField(context),
+            children: [
+              Center(
+                child: Image.asset(_iconPath),
+              ),
+              TextFormField(
+                initialValue: _initValue,
+                maxLines: 8,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (String? v) {
+                  _onChanged(v);
+                },
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _titleIcon() {
-    return Center(
-      child: Image.asset(_iconPath),
-    );
-  }
-
-  Widget _editField(BuildContext context) {
-    return TextFormField(
-      initialValue: _initValue,
-      maxLines: 5,
-      decoration: InputDecoration(
-        border: const OutlineInputBorder(),
-        labelStyle: TextStyle(fontSize: 14),
-      ),
-      onChanged: (String? v) {
-        _onChanged(v);
-      },
     );
   }
 }

@@ -1,31 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/service/firebase_auth.dart';
 
-final accountRepositoryProvider = Provider((ref) => _AccountRepository(ref.read));
+final accountRepositoryProvider = Provider((ref) => _AccountRepository(ref));
 
 class _AccountRepository {
-  const _AccountRepository(this._read);
+  const _AccountRepository(this._ref);
 
-  final Reader _read;
+  final Ref _ref;
 
-  bool isLogIn() {
-    final user = _read(firebaseAuthProvider);
-    return user != null;
+  bool get isSignIn => _ref.read(firebaseAuthProvider).isLogin;
+  String? get userName => _ref.read(firebaseAuthProvider).userName;
+  String? get userEmail => _ref.read(firebaseAuthProvider).email;
+
+  Future<void> signInWithGoogle() async {
+    await _ref.read(firebaseAuthProvider).signInWithGoogle();
   }
 
-  String? userName() {
-    return _read(firebaseAuthProvider)?.displayName;
-  }
-
-  String? userEmail() {
-    return _read(firebaseAuthProvider)?.email;
-  }
-
-  Future<void> login() async {
-    await _read(firebaseAuthProvider.notifier).login();
-  }
-
-  Future<void> logout() async {
-    await _read(firebaseAuthProvider.notifier).logout();
+  Future<void> signOutWithGoogle() async {
+    await _ref.read(firebaseAuthProvider).signOutWithGoogle();
   }
 }

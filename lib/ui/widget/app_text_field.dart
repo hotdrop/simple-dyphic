@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 ///
 class MultiLineTextField extends StatefulWidget {
   const MultiLineTextField({
+    Key? key,
     required this.label,
     required this.initValue,
     required this.limitLine,
     required this.hintText,
     required this.onChanged,
-  });
+  }) : super(key: key);
 
   final String label;
   final String? initValue;
@@ -19,7 +20,7 @@ class MultiLineTextField extends StatefulWidget {
   final void Function(String) onChanged;
 
   @override
-  _MultiLineTextFieldState createState() => _MultiLineTextFieldState();
+  State<MultiLineTextField> createState() => _MultiLineTextFieldState();
 }
 
 class _MultiLineTextFieldState extends State<MultiLineTextField> {
@@ -41,7 +42,7 @@ class _MultiLineTextFieldState extends State<MultiLineTextField> {
         hintText: widget.hintText,
         border: const OutlineInputBorder(),
       ),
-      style: TextStyle(fontSize: 14.0),
+      style: const TextStyle(fontSize: 14.0),
       onChanged: (String value) => widget.onChanged(value),
     );
   }

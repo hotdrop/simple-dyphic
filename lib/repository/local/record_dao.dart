@@ -4,7 +4,7 @@ import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/local/entities/record_entity.dart';
 
-final recordDaoProvider = Provider((ref) => _RecordDao());
+final recordDaoProvider = Provider((ref) => const _RecordDao());
 
 class _RecordDao {
   const _RecordDao();

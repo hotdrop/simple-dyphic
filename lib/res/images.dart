@@ -1,19 +1,8 @@
 class Images {
-  Images._({
-    required this.breakfast,
-    required this.lunch,
-    required this.dinner,
-  });
+  const Images._();
 
-  factory Images.init() {
-    return Images._(
-      breakfast: 'assets/images/ic_breakfast.png',
-      lunch: 'assets/images/ic_lunch.png',
-      dinner: 'assets/images/ic_dinner.png',
-    );
-  }
-
-  final String breakfast;
-  final String lunch;
-  final String dinner;
+  static const String icAppPath = 'assets/images/ic_app_icon.png';
+  static const String breakfastPath = 'assets/images/ic_breakfast.png';
+  static const String lunchPath = 'assets/images/ic_lunch.png';
+  static const String dinnerPath = 'assets/images/ic_dinner.png';
 }

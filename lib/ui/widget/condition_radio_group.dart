@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
-import 'package:simple_dyphic/ui/widget/app_icon.dart';
+import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 
 class ConditionRadioGroup extends StatefulWidget {
   const ConditionRadioGroup({
+    Key? key,
     required this.initSelectValue,
     required this.onSelected,
-  });
+  }) : super(key: key);
 
   final ConditionType? initSelectValue;
   final Function(ConditionType) onSelected;
 
   @override
-  _ConditionRadioGroupState createState() => _ConditionRadioGroupState();
+  State<ConditionRadioGroup> createState() => _ConditionRadioGroupState();
 }
 
 class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
@@ -41,7 +41,6 @@ class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
           value: type,
           groupValue: _selectType,
           onChanged: (ConditionType? newVal) {
-            AppLogger.d('選択した値は ${Condition.toStr(newVal)}');
             if (newVal != null) {
               setState(() {
                 _selectType = newVal;

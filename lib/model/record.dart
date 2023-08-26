@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:simple_dyphic/model/dyphic_id.dart';
-import 'package:simple_dyphic/res/R.dart';
 
 ///
 /// 記録情報を保持する
@@ -46,7 +45,7 @@ class Record {
   final String? conditionMemo;
 
   String showFormatDate() {
-    return DateFormat(R.res.strings.recordPageTitleDateFormat).format(date);
+    return DateFormat('yyyy年MM月dd日').format(date);
   }
 
   bool isSameDay(DateTime targetAt) {
@@ -59,24 +58,6 @@ class Record {
 
   bool notRegister() {
     return breakfast == null && lunch == null && dinner == null && condition == null && conditionMemo == null;
-  }
-
-  String getInfoJoinStr() {
-    List<String> infos = [];
-
-    if (condition != null) {
-      infos.add('${R.res.strings.calenderDetailConditionLabel}$condition');
-    }
-    if (isWalking) {
-      infos.add('${R.res.strings.calenderDetailWalkingLabel}');
-    }
-    if (isToilet) {
-      infos.add('${R.res.strings.calenderDetailToiletLabel}');
-    }
-    if (infos.isNotEmpty) {
-      return infos.join(R.res.strings.calenderDetailInfoSeparator);
-    }
-    return '';
   }
 
   @override
@@ -97,27 +78,33 @@ class Record {
 class Condition {
   Condition._();
 
+  static const String conditionTypeBad = '悪い';
+  static const String conditionTypeNormal = '普通';
+  static const String conditionTypeGood = '良い';
+
   static ConditionType? toType(String? condition) {
-    if (condition == R.res.strings.conditionTypeBad) {
-      return ConditionType.bad;
-    } else if (condition == R.res.strings.conditionTypeGood) {
-      return ConditionType.good;
-    } else if (condition == R.res.strings.conditionTypeNormal) {
-      return ConditionType.normal;
-    } else {
-      return null;
+    switch (condition) {
+      case conditionTypeBad:
+        return ConditionType.bad;
+      case conditionTypeGood:
+        return ConditionType.good;
+      case conditionTypeNormal:
+        return ConditionType.normal;
+      default:
+        return null;
     }
   }
 
   static String? toStr(ConditionType? type) {
-    if (type == ConditionType.bad) {
-      return R.res.strings.conditionTypeBad;
-    } else if (type == ConditionType.good) {
-      return R.res.strings.conditionTypeGood;
-    } else if (type == ConditionType.normal) {
-      return R.res.strings.conditionTypeNormal;
-    } else {
-      return null;
+    switch (type) {
+      case ConditionType.bad:
+        return conditionTypeBad;
+      case ConditionType.good:
+        return conditionTypeGood;
+      case ConditionType.normal:
+        return conditionTypeNormal;
+      default:
+        return null;
     }
   }
 }
