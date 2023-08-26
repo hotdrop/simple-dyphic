@@ -18,9 +18,6 @@ class _RecordApi {
 
   Future<void> saveAll(List<Record> records) async {
     AppLogger.d('${records.length} 件のレコード情報を保存します。');
-    for (var record in records) {
-      AppLogger.d('${record.id} のレコードを保存します。');
-      await _ref.read(firestoreProvider).save(record);
-    }
+    await _ref.read(firestoreProvider).saveAll(records);
   }
 }

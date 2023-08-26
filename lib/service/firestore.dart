@@ -70,15 +70,6 @@ class _Firestore {
     }
   }
 
-  Future<void> save(Record record) async {
-    final userId = _ref.read(firebaseAuthProvider).userId;
-    if (userId == null) {
-      AppLogger.d('未ログインなのでレコード情報は保存しません。');
-      return;
-    }
-    await _save(userId, record);
-  }
-
   Future<void> _save(String userId, Record record) async {
     try {
       final map = <String, dynamic>{};

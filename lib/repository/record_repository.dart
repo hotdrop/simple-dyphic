@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/local/record_dao.dart';
-import 'package:simple_dyphic/service/firestore.dart';
+import 'package:simple_dyphic/repository/remote/record_api.dart';
 
 final recordRepositoryProvider = Provider((ref) => _RecordRepository(ref));
 
@@ -23,12 +23,12 @@ class _RecordRepository {
   }
 
   Future<void> restore() async {
-    final remoteRecords = await _ref.read(firestoreProvider).findAll();
+    final remoteRecords = await _ref.read(recordApiProvider).findAll();
     await _ref.read(recordDaoProvider).saveAll(remoteRecords);
   }
 
   Future<void> backup() async {
     final records = await findAll();
-    await _ref.read(firestoreProvider).saveAll(records);
+    await _ref.read(recordApiProvider).saveAll(records);
   }
 }
