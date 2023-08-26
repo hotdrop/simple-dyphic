@@ -9,4 +9,4 @@ flutter build apk --release --split-per-abi
 ```
 
 # screenshot
-<img src="images/01_top_page.png" /><img src="images/02_record_page.png" /><img src="images/03_settings_page.png" />
+<img src="images/01_top_page.png" /> <img src="images/02_record_page.png" /> <img src="images/03_settings_page.png" />
