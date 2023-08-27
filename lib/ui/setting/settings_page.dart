@@ -49,7 +49,6 @@ class _ViewBody extends ConsumerWidget {
       children: [
         const _RowAccountInfo(),
         const _RowAppLicense(),
-        const Divider(),
         if (isSignIn) ...[
           const _RowBackup(),
           const _RowRestore(),

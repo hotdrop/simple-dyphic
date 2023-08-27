@@ -4,21 +4,14 @@ class AppTheme {
   AppTheme._();
 
   static const Color primaryColor = Colors.lightBlue;
-  static const Color primaryColorDark = Colors.blueAccent;
-  static const Color accentColor = Color(0xFF0000FF);
-  static const Color accentColorDark = Color(0xFF3333FF);
+  static const Color primaryColorDark = Color(0xFF0000FF);
 
   static final ThemeData dark = ThemeData.dark().copyWith(
     primaryColor: primaryColor,
-    primaryColorDark: accentColorDark,
+    primaryColorDark: primaryColorDark,
     scaffoldBackgroundColor: const Color(0xFF232323),
     applyElevationOverlayColor: true,
-    dividerColor: accentColor,
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        backgroundColor: accentColor,
-      ),
-    ),
+    dividerColor: primaryColor,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
@@ -46,8 +39,8 @@ class AppTheme {
         return null;
       }),
     ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: primaryColor,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      selectedItemColor: primaryColor,
     ),
   );
 }
