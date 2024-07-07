@@ -36,7 +36,7 @@ class AppDialog {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _onCancel!.call();
+              _onCancel.call();
             },
             child: const Text('キャンセル'),
           ),
