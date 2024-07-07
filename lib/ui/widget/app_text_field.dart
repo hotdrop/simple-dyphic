@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 ///
 class MultiLineTextField extends StatefulWidget {
   const MultiLineTextField({
-    Key? key,
+    super.key,
     required this.label,
     required this.initValue,
     required this.limitLine,
     required this.hintText,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final String? initValue;

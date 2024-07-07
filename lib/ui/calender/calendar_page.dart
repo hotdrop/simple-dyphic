@@ -10,7 +10,7 @@ import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderPage extends ConsumerWidget {
-  const CalenderPage({Key? key}) : super(key: key);
+  const CalenderPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +59,7 @@ class _ViewBody extends StatelessWidget {
 }
 
 class _ViewCalendar extends ConsumerWidget {
-  const _ViewCalendar({Key? key}) : super(key: key);
+  const _ViewCalendar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +106,7 @@ class _ViewCalendar extends ConsumerWidget {
 /// カレンダーの日付の下に表示するマーカーアイコンの処理
 ///
 class _ViewMarkers extends StatelessWidget {
-  const _ViewMarkers(this.records, {Key? key}) : super(key: key);
+  const _ViewMarkers(this.records);
 
   final List<Record> records;
   static const double _calendarIconSize = 15;
@@ -153,7 +153,7 @@ class _ViewMarkers extends StatelessWidget {
 /// タップした日付の記録情報をカレンダーの下に表示する
 ///
 class _ViewSelectedDayInfoCard extends ConsumerWidget {
-  const _ViewSelectedDayInfoCard({Key? key}) : super(key: key);
+  const _ViewSelectedDayInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,7 +180,7 @@ class _ViewSelectedDayInfoCard extends ConsumerWidget {
 }
 
 class _ViewContentsOnInfoCard extends StatelessWidget {
-  const _ViewContentsOnInfoCard({Key? key}) : super(key: key);
+  const _ViewContentsOnInfoCard();
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +204,7 @@ class _ViewContentsOnInfoCard extends StatelessWidget {
 }
 
 class _ViewHeaderOnInfoCard extends ConsumerWidget {
-  const _ViewHeaderOnInfoCard({Key? key}) : super(key: key);
+  const _ViewHeaderOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,7 +216,7 @@ class _ViewHeaderOnInfoCard extends ConsumerWidget {
 }
 
 class _ViewDetailOnInfoCard extends ConsumerWidget {
-  const _ViewDetailOnInfoCard({Key? key}) : super(key: key);
+  const _ViewDetailOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -236,7 +236,7 @@ class _ViewDetailOnInfoCard extends ConsumerWidget {
 }
 
 class _ViewMemoOnInfoCard extends ConsumerWidget {
-  const _ViewMemoOnInfoCard({Key? key}) : super(key: key);
+  const _ViewMemoOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

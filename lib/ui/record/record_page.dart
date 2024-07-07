@@ -23,22 +23,24 @@ class RecordPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return WillPopScope(
-      onWillPop: () async {
-        final isUpdate = ref.read(isUpdateRecordProvider);
-        if (isUpdate) {
-          AppDialog.okAndCancel(
-            message: '内容が更新されていますが、保存せずに閉じてよろしいですか？',
-            onOk: () async {
-              ref.read(recordControllerProvider.notifier).clear();
-              Navigator.pop(context, false);
-            },
-          ).show(context);
-        } else {
-          ref.read(recordControllerProvider.notifier).clear();
-          Navigator.pop(context, false);
+    return PopScope(
+      canPop: false, // 手動でpopする
+      onPopInvoked: (bool didPop) {
+        if (!didPop) {
+          final isUpdate = ref.read(isUpdateRecordProvider);
+          if (isUpdate) {
+            AppDialog.okAndCancel(
+              message: '内容が更新されていますが、保存せずに閉じてよろしいですか？',
+              onOk: () async {
+                ref.read(recordControllerProvider.notifier).clear();
+                Navigator.pop(context, false);
+              },
+            ).show(context);
+          } else {
+            ref.read(recordControllerProvider.notifier).clear();
+            Navigator.pop(context, false);
+          }
         }
-        return false;
       },
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -86,7 +88,7 @@ class _ViewMealArea extends ConsumerWidget {
     return Column(
       children: [
         SizedBox(
-          height: 250,
+          height: 280,
           width: double.infinity,
           child: ListView(
             scrollDirection: Axis.horizontal,

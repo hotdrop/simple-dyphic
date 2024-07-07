@@ -4,10 +4,10 @@ import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 
 class ConditionRadioGroup extends StatefulWidget {
   const ConditionRadioGroup({
-    Key? key,
+    super.key,
     required this.initSelectValue,
     required this.onSelected,
-  }) : super(key: key);
+  });
 
   final ConditionType? initSelectValue;
   final Function(ConditionType) onSelected;
