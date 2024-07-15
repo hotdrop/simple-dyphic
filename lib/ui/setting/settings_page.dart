@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/res/images.dart';
 import 'package:simple_dyphic/ui/setting/settings_provider.dart';
-import 'package:simple_dyphic/ui/widget/app_progress_dialog.dart';
+import 'package:simple_dyphic/ui/setting/widget/google_button.dart';
+import 'package:simple_dyphic/ui/setting/widget/app_progress_dialog.dart';
 import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -45,17 +46,18 @@ class _ViewBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isSignIn = ref.watch(settingIsSignInProvider);
 
-    return ListView(
+    return Column(
       children: [
         const _RowAccountInfo(),
         const _RowAppLicense(),
         if (isSignIn) ...[
           const _RowBackup(),
           const _RowRestore(),
-          const Divider(),
+          const SizedBox(height: 64),
           const _SignOutButton(),
         ],
         if (!isSignIn) ...[
+          const SizedBox(height: 64),
           const _SignInButton(),
         ],
       ],
@@ -162,62 +164,39 @@ class _RowRestore extends ConsumerWidget {
 }
 
 ///
-/// サインインボタン
+/// Googleサインイン
 ///
 class _SignInButton extends ConsumerWidget {
   const _SignInButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: ElevatedButton(
-        onPressed: () => _processSignIn(context, ref),
-        child: const Text('Googleアカウントでサインインする'),
-      ),
-    );
-  }
-
-  void _processSignIn(BuildContext context, WidgetRef ref) {
-    const progressDialog = AppProgressDialog<void>();
-    progressDialog.show(
-      context,
-      execute: ref.read(settingsControllerProvider.notifier).signInWithGoogle,
-      onSuccess: (_) {/* 成功時は何もしない */},
-      onError: (err) => AppDialog.ok(message: 'err').show(context),
+    return GoogleSignInButton(
+      onPressed: () async {
+        await ref.read(settingsControllerProvider.notifier).signInWithGoogle();
+      },
     );
   }
 }
 
 ///
-/// サインアウトボタン
+/// Googleサインアウト
 ///
 class _SignOutButton extends ConsumerWidget {
   const _SignOutButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: OutlinedButton(
-        child: const Text('Googleアカウントからサインアウトする'),
-        onPressed: () {
-          AppDialog.okAndCancel(
-            message: 'Googleアカウントからサインアウトします。よろしいですか？',
-            onOk: () => _processSignOut(context, ref),
-          ).show(context);
-        },
-      ),
-    );
-  }
-
-  void _processSignOut(BuildContext context, WidgetRef ref) {
-    const progressDialog = AppProgressDialog<void>();
-    progressDialog.show(
-      context,
-      execute: ref.read(settingsControllerProvider.notifier).signOutWithGoogle,
-      onSuccess: (_) {/* 成功時は何もしない */},
-      onError: (err) => AppDialog.ok(message: '$err').show(context),
+    return OutlinedButton(
+      child: const Text('Googleからサインアウトする'),
+      onPressed: () {
+        AppDialog.okAndCancel(
+          message: 'Googleアカウントからサインアウトします。よろしいですか？',
+          onOk: () async {
+            await ref.read(settingsControllerProvider.notifier).signOutWithGoogle();
+          },
+        ).show(context);
+      },
     );
   }
 }

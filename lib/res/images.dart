@@ -6,4 +6,5 @@ class Images {
   static const String lunchPath = 'assets/images/ic_lunch.png';
   static const String dinnerPath = 'assets/images/ic_dinner.png';
   static const String ringfitPath = 'assets/images/ic_ringfit.png';
+  static const String icGoogle = 'assets/images/ic_google.png';
 }
