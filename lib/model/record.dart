@@ -85,7 +85,7 @@ class Record {
   }
 
   bool isRingfit() {
-    if (ringfitKcal != null && ringfitKm != null) {
+    if (ringfitKcal == null || ringfitKm == null) {
       return false;
     }
 

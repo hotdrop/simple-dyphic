@@ -20,7 +20,7 @@ class MealCard extends StatelessWidget {
   }
 
   factory MealCard.dinner({String? initValue, required Function(String?) onChanged}) {
-    return MealCard._(Images.dinnerPath, const Color(0xFF3D2EAD), initValue, onChanged);
+    return MealCard._(Images.dinnerPath, const Color.fromARGB(255, 97, 83, 196), initValue, onChanged);
   }
 
   final String _iconPath;
@@ -45,7 +45,7 @@ class MealCard extends StatelessWidget {
               ),
               TextFormField(
                 initialValue: _initValue,
-                maxLines: 8,
+                maxLines: 6,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
