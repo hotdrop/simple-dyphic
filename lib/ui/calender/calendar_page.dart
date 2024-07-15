@@ -140,7 +140,8 @@ class _ViewMarkers extends StatelessWidget {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
-    if (record.isExercise) {
+    if (record.isRingfit()) {
+      // TODO ここリングフィットのアイコンにする
       markers.add(const SizedBox(width: _calendarIconSize, child: Text('🏃‍♂️')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));

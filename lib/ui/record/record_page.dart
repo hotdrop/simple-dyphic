@@ -136,22 +136,13 @@ class _ViewDayActionCheck extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        AppCheckBox.exercise(
-          initValue: record.isExercise,
-          onChecked: (bool isCheck) {
-            ref.read(recordControllerProvider.notifier).inputIsExercise(isCheck);
-          },
-        ),
-        AppCheckBox.toilet(
-          initValue: record.isToilet,
-          onChecked: (bool isCheck) {
-            ref.read(recordControllerProvider.notifier).inputIsToilet(isCheck);
-          },
-        ),
-      ],
+    return Center(
+      child: AppCheckBox.toilet(
+        initValue: record.isToilet,
+        onChecked: (bool isCheck) {
+          ref.read(recordControllerProvider.notifier).inputIsToilet(isCheck);
+        },
+      ),
     );
   }
 }

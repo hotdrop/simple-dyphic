@@ -14,76 +14,33 @@ class _RecordDao {
 
   final Ref ref;
 
-  Future<List<Record>> findAll() async {
-    final isar = ref.read(localDataSourceProvider).isar;
-    final records = await isar.recordEntitiyIsars.where().findAll();
-    return records
-        .map((e) => Record.create(
-              id: e.id,
-              breakfast: e.breakfast,
-              lunch: e.lunch,
-              dinner: e.dinner,
-              isExercise: e.isWalking,
-              isToilet: e.isToilet,
-              condition: e.condition,
-              conditionMemo: e.conditionMemo,
-            ))
-        .toList();
-  }
-
   Future<Record> find(int key) async {
     final isar = ref.read(localDataSourceProvider).isar;
     final record = await isar.recordEntitiyIsars.get(key);
     if (record == null) {
       throw Exception('Record not found');
     }
+    return _entityToModel(record);
+  }
 
-    return Record.create(
-      id: record.id,
-      breakfast: record.breakfast,
-      lunch: record.lunch,
-      dinner: record.dinner,
-      isExercise: record.isWalking,
-      isToilet: record.isToilet,
-      condition: record.condition,
-      conditionMemo: record.conditionMemo,
-    );
+  Future<List<Record>> findAll() async {
+    final isar = ref.read(localDataSourceProvider).isar;
+    final records = await isar.recordEntitiyIsars.where().findAll();
+    return records.map((e) => _entityToModel(e)).toList();
   }
 
   Future<void> save(Record record) async {
-    final entity = RecordEntitiyIsar(
-      id: record.id,
-      breakfast: record.breakfast,
-      lunch: record.lunch,
-      dinner: record.dinner,
-      isWalking: record.isExercise,
-      isToilet: record.isToilet,
-      condition: record.condition,
-      conditionMemo: record.conditionMemo,
-    );
-
     final isar = ref.read(localDataSourceProvider).isar;
     await isar.writeTxn(() async {
+      final entity = _modelToEntity(record);
       await isar.recordEntitiyIsars.put(entity);
     });
   }
 
   Future<void> saveAll(List<Record> records) async {
-    final entities = records
-        .map((r) => RecordEntitiyIsar(
-              id: r.id,
-              breakfast: r.breakfast,
-              lunch: r.lunch,
-              dinner: r.dinner,
-              isWalking: r.isExercise,
-              isToilet: r.isToilet,
-              condition: r.condition,
-              conditionMemo: r.conditionMemo,
-            ))
-        .toList();
-
     final isar = ref.read(localDataSourceProvider).isar;
     await isar.writeTxn(() async {
+      final entities = records.map((r) => _modelToEntity(r)).toList();
       await isar.clear();
       await isar.recordEntitiyIsars.putAll(entities);
     });
@@ -105,7 +62,6 @@ class _RecordDao {
               breakfast: e.breakfast,
               lunch: e.lunch,
               dinner: e.dinner,
-              isExercise: e.isWalking,
               isToilet: e.isToilet,
               condition: e.condition,
               conditionMemo: e.conditionMemo,
@@ -123,7 +79,6 @@ class _RecordDao {
       breakfast: e.breakfast,
       lunch: e.lunch,
       dinner: e.dinner,
-      isExercise: e.isWalking,
       isToilet: e.isToilet,
       condition: e.condition,
       conditionMemo: e.conditionMemo,
@@ -136,7 +91,6 @@ class _RecordDao {
       breakfast: record.breakfast,
       lunch: record.lunch,
       dinner: record.dinner,
-      isWalking: record.isExercise,
       isToilet: record.isToilet,
       condition: record.condition,
       conditionMemo: record.conditionMemo,
@@ -153,7 +107,6 @@ class _RecordDao {
               breakfast: r.breakfast,
               lunch: r.lunch,
               dinner: r.dinner,
-              isWalking: r.isExercise,
               isToilet: r.isToilet,
               condition: r.condition,
               conditionMemo: r.conditionMemo,
@@ -163,5 +116,33 @@ class _RecordDao {
     final box = await Hive.openBox<RecordEntity>(RecordEntity.boxName);
     await box.clear();
     await box.addAll(entities);
+  }
+
+  Record _entityToModel(RecordEntitiyIsar entity) {
+    return Record.create(
+      id: entity.id,
+      breakfast: entity.breakfast,
+      lunch: entity.lunch,
+      dinner: entity.dinner,
+      isToilet: entity.isToilet,
+      condition: entity.condition,
+      conditionMemo: entity.conditionMemo,
+      ringfitKcal: entity.ringfitKcal,
+      ringfitKm: entity.ringfitKm,
+    );
+  }
+
+  RecordEntitiyIsar _modelToEntity(Record record) {
+    return RecordEntitiyIsar(
+      id: record.id,
+      breakfast: record.breakfast,
+      lunch: record.lunch,
+      dinner: record.dinner,
+      isToilet: record.isToilet,
+      condition: record.condition,
+      conditionMemo: record.conditionMemo,
+      ringfitKcal: record.ringfitKcal,
+      ringfitKm: record.ringfitKm,
+    );
   }
 }

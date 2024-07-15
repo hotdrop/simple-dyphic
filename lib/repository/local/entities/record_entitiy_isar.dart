@@ -9,18 +9,20 @@ class RecordEntitiyIsar {
     this.breakfast,
     this.lunch,
     this.dinner,
-    this.isWalking = false,
     this.isToilet = false,
     this.condition,
     this.conditionMemo,
+    this.ringfitKcal,
+    this.ringfitKm,
   });
 
   Id id;
   String? breakfast;
   String? lunch;
   String? dinner;
-  bool isWalking;
   bool isToilet;
   String? condition;
   String? conditionMemo;
+  double? ringfitKcal;
+  double? ringfitKm;
 }

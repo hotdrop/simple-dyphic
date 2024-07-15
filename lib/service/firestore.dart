@@ -14,10 +14,11 @@ class _Firestore {
   static const String _recordBreakFastField = 'breakfast';
   static const String _recordLunchField = 'lunch';
   static const String _recordDinnerField = 'dinner';
-  static const String _recordIsExercise = 'isWalking'; // フィールド名は旧名を利用
   static const String _recordIsToilet = 'isToilet';
   static const String _recordCondition = 'condition';
   static const String _recordConditionMemoField = 'conditionMemo';
+  static const String _recordRingfitKcal = 'ringfitKcal';
+  static const String _recordRingfitKm = 'ringfitKm';
 
   final Ref _ref;
 
@@ -43,10 +44,11 @@ class _Firestore {
           breakfast: _getString(map, _recordBreakFastField),
           lunch: _getString(map, _recordLunchField),
           dinner: _getString(map, _recordDinnerField),
-          isExercise: _getBool(map, _recordIsExercise),
           isToilet: _getBool(map, _recordIsToilet),
           condition: _getString(map, _recordCondition),
           conditionMemo: _getString(map, _recordConditionMemoField),
+          ringfitKcal: _getDouble(map, _recordRingfitKcal),
+          ringfitKm: _getDouble(map, _recordRingfitKm),
         );
         records.add(record);
       }
@@ -76,17 +78,13 @@ class _Firestore {
       if (record.breakfast != null) map[_recordBreakFastField] = record.breakfast;
       if (record.lunch != null) map[_recordLunchField] = record.lunch;
       if (record.dinner != null) map[_recordDinnerField] = record.dinner;
-      map[_recordIsExercise] = record.isExercise;
       map[_recordIsToilet] = record.isToilet;
       if (record.condition != null) map[_recordCondition] = record.condition;
       if (record.conditionMemo != null) map[_recordConditionMemoField] = record.conditionMemo;
+      if (record.ringfitKcal != null) map[_recordRingfitKcal] = record.ringfitKcal;
+      if (record.ringfitKm != null) map[_recordRingfitKm] = record.ringfitKm;
 
-      await FirebaseFirestore.instance
-          .collection(_rootCollection)
-          .doc(userId)
-          .collection(_recordRootCollection)
-          .doc(record.id.toString())
-          .set(map, SetOptions(merge: true));
+      await FirebaseFirestore.instance.collection(_rootCollection).doc(userId).collection(_recordRootCollection).doc(record.id.toString()).set(map, SetOptions(merge: true));
     } on FirebaseException catch (e, s) {
       await AppLogger.e('Firestore: id=${record.id} の保持に失敗', e, s);
       rethrow;
@@ -108,6 +106,15 @@ class _Firestore {
       return fieldVal;
     } else {
       return false;
+    }
+  }
+
+  double? _getDouble(Map<String, dynamic>? map, String fieldName) {
+    dynamic fieldVal = map?[fieldName] ?? 0;
+    if (fieldVal is double) {
+      return fieldVal;
+    } else {
+      return null;
     }
   }
 }

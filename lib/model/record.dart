@@ -5,44 +5,72 @@ import 'package:simple_dyphic/model/dyphic_id.dart';
 /// 記録情報を保持する
 ///
 class Record {
-  const Record._(
-    this.id,
-    this.date,
-    this.breakfast,
-    this.lunch,
-    this.dinner,
-    this.isExercise,
-    this.isToilet,
-    this.condition,
-    this.conditionMemo,
-  );
+  const Record._({
+    required this.id,
+    required this.date,
+    required this.breakfast,
+    required this.lunch,
+    required this.dinner,
+    required this.isToilet,
+    required this.condition,
+    required this.conditionMemo,
+    required this.ringfitKcal,
+    required this.ringfitKm,
+  });
 
   factory Record.create({
     required int id,
     String? breakfast,
     String? lunch,
     String? dinner,
-    bool isExercise = false,
     bool isToilet = false,
     String? condition,
     String? conditionMemo,
+    double? ringfitKcal,
+    double? ringfitKm,
   }) {
-    return Record._(id, DyphicID.idToDate(id), breakfast, lunch, dinner, isExercise, isToilet, condition, conditionMemo);
+    return Record._(
+      id: id,
+      date: DyphicID.idToDate(id),
+      breakfast: breakfast,
+      lunch: lunch,
+      dinner: dinner,
+      isToilet: isToilet,
+      condition: condition,
+      conditionMemo: conditionMemo,
+      ringfitKcal: ringfitKcal,
+      ringfitKm: ringfitKm,
+    );
   }
 
   factory Record.createEmpty(DateTime idDate) {
-    return Record._(DyphicID.dateToId(idDate), idDate, null, null, null, false, false, null, null);
+    return Record._(
+      id: DyphicID.dateToId(idDate),
+      date: idDate,
+      breakfast: null,
+      lunch: null,
+      dinner: null,
+      isToilet: false,
+      condition: null,
+      conditionMemo: null,
+      ringfitKcal: null,
+      ringfitKm: null,
+    );
   }
 
   final int id;
   final DateTime date;
+  // 食事
   final String? breakfast;
   final String? lunch;
   final String? dinner;
-  final bool isExercise;
+  // 体調
   final bool isToilet;
   final String? condition;
   final String? conditionMemo;
+  // リングフィット記録
+  final double? ringfitKcal;
+  final double? ringfitKm;
 
   String showFormatDate() {
     return DateFormat('yyyy年MM月dd日').format(date);
@@ -54,6 +82,14 @@ class Record {
 
   ConditionType? getConditionType() {
     return Condition.toType(condition);
+  }
+
+  bool isRingfit() {
+    if (ringfitKcal != null && ringfitKm != null) {
+      return false;
+    }
+
+    return ringfitKcal! > 0 && ringfitKm! > 0;
   }
 
   bool notRegister() {
@@ -69,29 +105,21 @@ class Condition {
   static const String conditionTypeGood = '良い';
 
   static ConditionType? toType(String? condition) {
-    switch (condition) {
-      case conditionTypeBad:
-        return ConditionType.bad;
-      case conditionTypeGood:
-        return ConditionType.good;
-      case conditionTypeNormal:
-        return ConditionType.normal;
-      default:
-        return null;
-    }
+    return switch (condition) {
+      conditionTypeBad => ConditionType.bad,
+      conditionTypeGood => ConditionType.good,
+      conditionTypeNormal => ConditionType.normal,
+      _ => null,
+    };
   }
 
   static String? toStr(ConditionType? type) {
-    switch (type) {
-      case ConditionType.bad:
-        return conditionTypeBad;
-      case ConditionType.good:
-        return conditionTypeGood;
-      case ConditionType.normal:
-        return conditionTypeNormal;
-      default:
-        return null;
-    }
+    return switch (type) {
+      ConditionType.bad => conditionTypeBad,
+      ConditionType.good => conditionTypeGood,
+      ConditionType.normal => conditionTypeNormal,
+      _ => null,
+    };
   }
 }
 
