@@ -6,15 +6,15 @@ class AppTheme {
   static const Color primaryColor = Colors.lightBlue;
   static const Color primaryColorDark = Color(0xFF0000FF);
 
-  static final ThemeData dark = ThemeData.dark().copyWith(
+  static final ThemeData dark = ThemeData.dark(useMaterial3: false).copyWith(
     primaryColor: primaryColor,
     primaryColorDark: primaryColorDark,
     scaffoldBackgroundColor: const Color(0xFF232323),
     applyElevationOverlayColor: true,
-    dividerColor: primaryColor,
+    appBarTheme: const AppBarTheme(centerTitle: true),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: primaryColor,
+        backgroundColor: primaryColorDark,
       ),
     ),
     checkboxTheme: CheckboxThemeData(

@@ -38,13 +38,6 @@ class RecordController extends _$RecordController {
     }
   }
 
-  Future<void> inputIsExercise(bool isCheck) async {
-    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
-          isExercise: isCheck,
-          isUpdate: true,
-        ));
-  }
-
   Future<void> inputIsToilet(bool isCheck) async {
     ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
           isToilet: isCheck,
@@ -68,6 +61,24 @@ class RecordController extends _$RecordController {
         ));
   }
 
+  void inputRingfitKcal(double? newVal) {
+    if (newVal != null) {
+      ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
+            ringfitKcal: newVal,
+            isUpdate: true,
+          ));
+    }
+  }
+
+  void inputRingfitKm(double? newVal) {
+    if (newVal != null) {
+      ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
+            ringfitKm: newVal,
+            isUpdate: true,
+          ));
+    }
+  }
+
   Future<void> save(Record record) async {
     final newRecord = ref.read(_uiStateProvider).toRecord(record);
     AppLogger.d('レコードを保存します。key=${newRecord.id}');
@@ -89,40 +100,44 @@ class _UiState {
     this.breakfast,
     this.lunch,
     this.dinner,
-    this.isExercise,
     this.isToilet,
     this.conditionType,
     this.conditionMemo,
+    this.ringfitKcal,
+    this.ringfitKm,
     this.isUpdate = false,
   });
 
   String? breakfast;
   String? lunch;
   String? dinner;
-  bool? isExercise;
   bool? isToilet;
   ConditionType? conditionType;
   String? conditionMemo;
+  double? ringfitKcal;
+  double? ringfitKm;
   bool isUpdate;
 
   _UiState copyWith({
     String? breakfast,
     String? lunch,
     String? dinner,
-    bool? isExercise,
     bool? isToilet,
     ConditionType? conditionType,
     String? conditionMemo,
+    double? ringfitKcal,
+    double? ringfitKm,
     bool? isUpdate,
   }) {
     return _UiState(
       breakfast: breakfast ?? this.breakfast,
       lunch: lunch ?? this.lunch,
       dinner: dinner ?? this.dinner,
-      isExercise: isExercise ?? this.isExercise,
       isToilet: isToilet ?? this.isToilet,
       conditionType: conditionType ?? this.conditionType,
       conditionMemo: conditionMemo ?? this.conditionMemo,
+      ringfitKcal: ringfitKcal ?? this.ringfitKcal,
+      ringfitKm: ringfitKm ?? this.ringfitKm,
       isUpdate: isUpdate ?? this.isUpdate,
     );
   }
@@ -133,10 +148,11 @@ class _UiState {
       breakfast: breakfast ?? record.breakfast,
       lunch: lunch ?? record.lunch,
       dinner: dinner ?? record.dinner,
-      isExercise: isExercise ?? record.isExercise,
       isToilet: isToilet ?? record.isToilet,
       condition: conditionType != null ? Condition.toStr(conditionType) : record.condition,
       conditionMemo: conditionMemo ?? record.conditionMemo,
+      ringfitKcal: ringfitKcal ?? record.ringfitKcal,
+      ringfitKm: ringfitKm ?? record.ringfitKm,
     );
   }
 }

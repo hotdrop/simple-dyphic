@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:simple_dyphic/common/app_logger.dart';
+import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/local/entities/record_entitiy_isar.dart';
 import 'package:simple_dyphic/repository/local/entities/record_entity.dart';
 import 'package:simple_dyphic/repository/local/record_dao.dart';
@@ -76,12 +77,42 @@ class LocalDataSource {
       return;
     }
 
+    // ここから先は移行が完了していない場合に通るルート
     AppLogger.d("移行を行います。");
-    // ここから先は移行が完了していないルート
     final records = await ref.read(recordDaoProvider).findAllForHive();
-    await ref.read(recordDaoProvider).saveAll(records);
+    // ConditionMemoからリングフィットの文字列を抜き出して新たに設けた項目に設定する
+    final updatedRecords = _extractRingfitFromConditionMemo(records);
+    await ref.read(recordDaoProvider).saveAll(updatedRecords);
 
     // Hiveのデータ削除
     await hiveBox.clear();
+  }
+
+  static const String _ringfitRegExp = r'リングフィット (\d{1,3}(?:\.\d{1,2})?)kcal (\d{1,2}(?:\.\d{1,2})?)km';
+  List<Record> _extractRingfitFromConditionMemo(List<Record> records) {
+    final regex = RegExp(_ringfitRegExp);
+    final updatedRecords = <Record>[];
+
+    for (var record in records) {
+      final memo = record.conditionMemo;
+      if (memo == null) {
+        updatedRecords.add(record);
+        continue;
+      }
+
+      final match = regex.firstMatch(memo);
+      if (match == null) {
+        updatedRecords.add(record);
+        continue;
+      }
+
+      final kcal = double.tryParse(match.group(1)!);
+      final km = double.tryParse(match.group(2)!);
+      updatedRecords.add(record.copyWith(
+        ringfitKcal: kcal,
+        ringfitKm: km,
+      ));
+    }
+    return updatedRecords;
   }
 }

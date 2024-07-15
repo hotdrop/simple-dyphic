@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
+import 'package:simple_dyphic/res/images.dart';
 
 import 'package:simple_dyphic/ui/calender/calendar_provider.dart';
 import 'package:simple_dyphic/ui/record/record_page.dart';
@@ -140,8 +141,8 @@ class _ViewMarkers extends StatelessWidget {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
-    if (record.isExercise) {
-      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🏃‍♂️')));
+    if (record.isRingfit()) {
+      markers.add(SizedBox(width: _calendarIconSize, child: Image.asset(Images.ringfitPath)));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
