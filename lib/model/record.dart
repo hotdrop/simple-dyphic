@@ -95,6 +95,21 @@ class Record {
   bool notRegister() {
     return breakfast == null && lunch == null && dinner == null && condition == null && conditionMemo == null;
   }
+
+  Record copyWith({double? ringfitKcal, double? ringfitKm}) {
+    return Record._(
+      id: id,
+      date: date,
+      breakfast: breakfast,
+      lunch: lunch,
+      dinner: dinner,
+      isToilet: isToilet,
+      condition: condition,
+      conditionMemo: conditionMemo,
+      ringfitKcal: ringfitKcal ?? this.ringfitKcal,
+      ringfitKm: ringfitKm ?? this.ringfitKm,
+    );
+  }
 }
 
 class Condition {
