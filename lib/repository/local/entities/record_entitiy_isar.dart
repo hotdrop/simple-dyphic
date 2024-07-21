@@ -12,6 +12,8 @@ class RecordEntitiyIsar {
     this.isToilet = false,
     this.condition,
     this.conditionMemo,
+    this.stepCount,
+    this.healthKcal,
     this.ringfitKcal,
     this.ringfitKm,
   });
@@ -23,6 +25,8 @@ class RecordEntitiyIsar {
   bool isToilet;
   String? condition;
   String? conditionMemo;
+  int? stepCount;
+  double? healthKcal;
   double? ringfitKcal;
   double? ringfitKm;
 }

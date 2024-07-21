@@ -9,7 +9,9 @@ part 'record_provider.g.dart';
 @riverpod
 class RecordController extends _$RecordController {
   @override
-  void build() {}
+  void build() {
+    Future<void>.delayed(Duration.zero).then((_) => _onLoadHealthData());
+  }
 
   Future<void> inputBreakfast(String? newVal) async {
     if (newVal != null) {
@@ -61,6 +63,10 @@ class RecordController extends _$RecordController {
         ));
   }
 
+  Future<void> _onLoadHealthData() async {
+    // TODO healthCareProviderのfetchDataを実行
+  }
+
   void inputRingfitKcal(double? newVal) {
     if (newVal != null) {
       ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
@@ -103,6 +109,8 @@ class _UiState {
     this.isToilet,
     this.conditionType,
     this.conditionMemo,
+    this.stepCount,
+    this.healthKcal,
     this.ringfitKcal,
     this.ringfitKm,
     this.isUpdate = false,
@@ -114,6 +122,8 @@ class _UiState {
   bool? isToilet;
   ConditionType? conditionType;
   String? conditionMemo;
+  int? stepCount;
+  double? healthKcal;
   double? ringfitKcal;
   double? ringfitKm;
   bool isUpdate;
@@ -125,6 +135,8 @@ class _UiState {
     bool? isToilet,
     ConditionType? conditionType,
     String? conditionMemo,
+    int? stepCount,
+    double? healthKcal,
     double? ringfitKcal,
     double? ringfitKm,
     bool? isUpdate,
@@ -136,6 +148,8 @@ class _UiState {
       isToilet: isToilet ?? this.isToilet,
       conditionType: conditionType ?? this.conditionType,
       conditionMemo: conditionMemo ?? this.conditionMemo,
+      stepCount: stepCount ?? this.stepCount,
+      healthKcal: healthKcal ?? this.healthKcal,
       ringfitKcal: ringfitKcal ?? this.ringfitKcal,
       ringfitKm: ringfitKm ?? this.ringfitKm,
       isUpdate: isUpdate ?? this.isUpdate,
@@ -151,6 +165,8 @@ class _UiState {
       isToilet: isToilet ?? record.isToilet,
       condition: conditionType != null ? Condition.toStr(conditionType) : record.condition,
       conditionMemo: conditionMemo ?? record.conditionMemo,
+      stepCount: stepCount ?? record.stepCount,
+      healthKcal: healthKcal ?? record.healthKcal,
       ringfitKcal: ringfitKcal ?? record.ringfitKcal,
       ringfitKm: ringfitKm ?? record.ringfitKm,
     );
