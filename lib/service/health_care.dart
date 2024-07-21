@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 
 final healthCareProvider = NotifierProvider<_HealthCareNotifier, HealthState>(_HealthCareNotifier.new);
@@ -55,9 +54,6 @@ class _HealthCareNotifier extends Notifier<HealthState> {
   /// 歩数を取得する前によぶ
   ///
   Future<void> authorize() async {
-    // TODO これだけだとダメでは？
-    await Permission.activityRecognition.request();
-
     final hasPermissions = await Health().hasPermissions(_dataTypes, permissions: _permissions) ?? false;
     if (hasPermissions) {
       state = HealthAuthorized();
@@ -77,14 +73,15 @@ class _HealthCareNotifier extends Notifier<HealthState> {
   /// 引数で受け取った日付の歩数とkcalを取得する
   /// エラーが発生した場合は例外で返す
   ///
-  Future<void> fetchData(DateTime date) async {
-    if (state == HealthAuthNotGrandted() || state == HealthUnavailable()) {
-      return;
+  Future<HealthData> fetchData(DateTime date) async {
+    if (state is! HealthAuthorized) {
+      throw Exception('必要な権限が許可されていないのにデータを取得しようとしました');
     }
 
     final startAt = DateTime(date.year, date.month, date.day, 0, 0, 0);
     final endAt = DateTime(date.year, date.month, date.day, 23, 59, 59);
     try {
+      AppLogger.d('$startAt 〜 $endAt の歩数と消費カロリーデータを取得します。');
       final List<HealthDataPoint> datas = await Health().getHealthDataFromTypes(
         types: _dataTypes,
         startTime: startAt,
@@ -100,7 +97,8 @@ class _HealthCareNotifier extends Notifier<HealthState> {
           kcal += _getKcalValue(dataPoint);
         }
       }
-      state = HealthStepData(step, kcal);
+      AppLogger.d('取得した情報: 歩数=$step 消費カロリー=$kcal');
+      return HealthData(step, kcal);
     } catch (e, s) {
       AppLogger.e('歩数取得でエラー', e, s);
       rethrow;
@@ -138,8 +136,8 @@ class HealthAuthNotGrandted extends HealthState {}
 
 class HealthAuthorized extends HealthState {}
 
-class HealthStepData extends HealthState {
-  HealthStepData(this.step, this.kcal);
+class HealthData {
+  HealthData(this.step, this.kcal);
   final int step;
   final double kcal;
 }

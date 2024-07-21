@@ -3,15 +3,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
+import 'package:simple_dyphic/service/health_care.dart';
 
 part 'record_provider.g.dart';
 
 @riverpod
 class RecordController extends _$RecordController {
   @override
-  void build() {
-    Future<void>.delayed(Duration.zero).then((_) => _onLoadHealthData());
+  Future<void> build(Record record) async {
+    await ref.read(recordMethodsProvider).fetchData(record.date);
   }
+}
+
+final recordMethodsProvider = Provider((ref) => _RecordMethods(ref));
+
+class _RecordMethods {
+  const _RecordMethods(this.ref);
+  final Ref ref;
 
   Future<void> inputBreakfast(String? newVal) async {
     if (newVal != null) {
@@ -63,8 +71,20 @@ class RecordController extends _$RecordController {
         ));
   }
 
-  Future<void> _onLoadHealthData() async {
-    // TODO healthCareProviderのfetchDataを実行
+  Future<void> onHealthAuthorized(DateTime date) async {
+    await ref.read(healthCareProvider.notifier).authorize();
+    await fetchData(date);
+  }
+
+  Future<void> fetchData(DateTime date) async {
+    final state = ref.read(healthCareProvider);
+    if (state is HealthAuthorized) {
+      final healthData = await ref.read(healthCareProvider.notifier).fetchData(date);
+      ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
+            stepCount: healthData.step,
+            healthKcal: healthData.kcal,
+          ));
+    }
   }
 
   void inputRingfitKcal(double? newVal) {
@@ -172,5 +192,11 @@ class _UiState {
     );
   }
 }
+
+final recordPageHealthDataProvider = Provider<HealthData>((ref) {
+  final step = ref.watch(_uiStateProvider.select((v) => v.stepCount)) ?? 0;
+  final kcal = ref.watch(_uiStateProvider.select((v) => v.healthKcal)) ?? 0;
+  return HealthData(step, kcal);
+});
 
 final isUpdateRecordProvider = Provider((ref) => ref.watch(_uiStateProvider.select((value) => value.isUpdate)));
