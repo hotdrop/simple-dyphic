@@ -205,7 +205,6 @@ class _ViewOnLoadHealthData extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(healthCareProvider);
     return switch (state) {
-      HealthFirstState() => const CircularProgressIndicator(),
       HealthUnavailable() => const _ViewNotAvailable('ヘルスケアアプリが利用できません'),
       HealthAvailable() => _ViewAuthorized(date),
       HealthAuthNotGrandted() => const _ViewNotAvailable('ヘルスケアアプリの利用権限がありません'),

@@ -11,7 +11,7 @@ class _HealthCareNotifier extends Notifier<HealthState> {
   @override
   HealthState build() {
     Health().configure(useHealthConnectIfAvailable: true);
-    return HealthFirstState();
+    return HealthUnavailable();
   }
 
   static const List<HealthDataType> _dataTypes = [
@@ -125,8 +125,6 @@ class _HealthCareNotifier extends Notifier<HealthState> {
 }
 
 sealed class HealthState {}
-
-class HealthFirstState extends HealthState {}
 
 class HealthUnavailable extends HealthState {}
 
