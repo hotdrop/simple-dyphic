@@ -2,6 +2,7 @@
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED"/>
 
     <application
         android:label="体調管理2"
