@@ -14,5 +14,5 @@ flutter build appbundle
 ```
 
 # screenshot
-Android端末でのスクリーンショット
+Android端末でのスクリーンショット  
 <img src="images/01_top_page.png" /> <img src="images/02_record_page.png" /> <img src="images/03_settings_page.png" />
