@@ -127,6 +127,8 @@ class _RecordDao {
       isToilet: entity.isToilet,
       condition: entity.condition,
       conditionMemo: entity.conditionMemo,
+      stepCount: entity.stepCount,
+      healthKcal: entity.healthKcal,
       ringfitKcal: entity.ringfitKcal,
       ringfitKm: entity.ringfitKm,
     );
@@ -141,6 +143,8 @@ class _RecordDao {
       isToilet: record.isToilet,
       condition: record.condition,
       conditionMemo: record.conditionMemo,
+      stepCount: record.stepCount,
+      healthKcal: record.healthKcal,
       ringfitKcal: record.ringfitKcal,
       ringfitKm: record.ringfitKm,
     );

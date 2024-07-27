@@ -14,6 +14,8 @@ class Record {
     required this.isToilet,
     required this.condition,
     required this.conditionMemo,
+    required this.stepCount,
+    required this.healthKcal,
     required this.ringfitKcal,
     required this.ringfitKm,
   });
@@ -26,6 +28,8 @@ class Record {
     bool isToilet = false,
     String? condition,
     String? conditionMemo,
+    int? stepCount,
+    double? healthKcal,
     double? ringfitKcal,
     double? ringfitKm,
   }) {
@@ -38,6 +42,8 @@ class Record {
       isToilet: isToilet,
       condition: condition,
       conditionMemo: conditionMemo,
+      stepCount: stepCount,
+      healthKcal: healthKcal,
       ringfitKcal: ringfitKcal,
       ringfitKm: ringfitKm,
     );
@@ -53,6 +59,8 @@ class Record {
       isToilet: false,
       condition: null,
       conditionMemo: null,
+      stepCount: null,
+      healthKcal: null,
       ringfitKcal: null,
       ringfitKm: null,
     );
@@ -68,7 +76,9 @@ class Record {
   final bool isToilet;
   final String? condition;
   final String? conditionMemo;
-  // リングフィット記録
+  // 運動記録
+  final int? stepCount;
+  final double? healthKcal;
   final double? ringfitKcal;
   final double? ringfitKm;
 
@@ -106,6 +116,8 @@ class Record {
       isToilet: isToilet,
       condition: condition,
       conditionMemo: conditionMemo,
+      stepCount: stepCount,
+      healthKcal: healthKcal,
       ringfitKcal: ringfitKcal ?? this.ringfitKcal,
       ringfitKm: ringfitKm ?? this.ringfitKm,
     );

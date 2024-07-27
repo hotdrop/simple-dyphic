@@ -3,13 +3,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
 import 'package:simple_dyphic/repository/record_repository.dart';
+import 'package:simple_dyphic/service/health_care.dart';
 
 part 'record_provider.g.dart';
 
 @riverpod
 class RecordController extends _$RecordController {
   @override
-  void build() {}
+  Future<void> build(Record record) async {
+    await ref.read(healthCareProvider.notifier).onLoadHealthData(record.date);
+  }
+}
+
+final recordMethodsProvider = Provider((ref) => _RecordMethods(ref));
+
+class _RecordMethods {
+  const _RecordMethods(this.ref);
+  final Ref ref;
 
   Future<void> inputBreakfast(String? newVal) async {
     if (newVal != null) {
@@ -61,6 +71,14 @@ class RecordController extends _$RecordController {
         ));
   }
 
+  void updateHealthData({required int stepCount, required double healthKcal, required bool isUpdate}) {
+    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
+          stepCount: stepCount,
+          healthKcal: healthKcal,
+          isUpdate: isUpdate,
+        ));
+  }
+
   void inputRingfitKcal(double? newVal) {
     if (newVal != null) {
       ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
@@ -103,6 +121,8 @@ class _UiState {
     this.isToilet,
     this.conditionType,
     this.conditionMemo,
+    this.stepCount,
+    this.healthKcal,
     this.ringfitKcal,
     this.ringfitKm,
     this.isUpdate = false,
@@ -114,6 +134,8 @@ class _UiState {
   bool? isToilet;
   ConditionType? conditionType;
   String? conditionMemo;
+  int? stepCount;
+  double? healthKcal;
   double? ringfitKcal;
   double? ringfitKm;
   bool isUpdate;
@@ -125,6 +147,8 @@ class _UiState {
     bool? isToilet,
     ConditionType? conditionType,
     String? conditionMemo,
+    int? stepCount,
+    double? healthKcal,
     double? ringfitKcal,
     double? ringfitKm,
     bool? isUpdate,
@@ -136,6 +160,8 @@ class _UiState {
       isToilet: isToilet ?? this.isToilet,
       conditionType: conditionType ?? this.conditionType,
       conditionMemo: conditionMemo ?? this.conditionMemo,
+      stepCount: stepCount ?? this.stepCount,
+      healthKcal: healthKcal ?? this.healthKcal,
       ringfitKcal: ringfitKcal ?? this.ringfitKcal,
       ringfitKm: ringfitKm ?? this.ringfitKm,
       isUpdate: isUpdate ?? this.isUpdate,
@@ -151,6 +177,8 @@ class _UiState {
       isToilet: isToilet ?? record.isToilet,
       condition: conditionType != null ? Condition.toStr(conditionType) : record.condition,
       conditionMemo: conditionMemo ?? record.conditionMemo,
+      stepCount: stepCount ?? record.stepCount,
+      healthKcal: healthKcal ?? record.healthKcal,
       ringfitKcal: ringfitKcal ?? record.ringfitKcal,
       ringfitKm: ringfitKm ?? record.ringfitKm,
     );

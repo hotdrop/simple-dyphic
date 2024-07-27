@@ -5,6 +5,7 @@ class AppTheme {
 
   static const Color primaryColor = Colors.lightBlue;
   static const Color primaryColorDark = Color(0xFF0000FF);
+  static const Color cardBackground = Color.fromARGB(255, 96, 96, 96);
 
   static final ThemeData dark = ThemeData.dark(useMaterial3: false).copyWith(
     primaryColor: primaryColor,

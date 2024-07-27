@@ -17,6 +17,8 @@ class _Firestore {
   static const String _recordIsToilet = 'isToilet';
   static const String _recordCondition = 'condition';
   static const String _recordConditionMemoField = 'conditionMemo';
+  static const String _recordStepCount = 'stepCount';
+  static const String _recordHealthKcal = 'healthKcal';
   static const String _recordRingfitKcal = 'ringfitKcal';
   static const String _recordRingfitKm = 'ringfitKm';
 
@@ -47,6 +49,8 @@ class _Firestore {
           isToilet: _getBool(map, _recordIsToilet),
           condition: _getString(map, _recordCondition),
           conditionMemo: _getString(map, _recordConditionMemoField),
+          stepCount: _getInt(map, _recordStepCount),
+          healthKcal: _getDouble(map, _recordHealthKcal),
           ringfitKcal: _getDouble(map, _recordRingfitKcal),
           ringfitKm: _getDouble(map, _recordRingfitKm),
         );
@@ -81,6 +85,8 @@ class _Firestore {
       map[_recordIsToilet] = record.isToilet;
       if (record.condition != null) map[_recordCondition] = record.condition;
       if (record.conditionMemo != null) map[_recordConditionMemoField] = record.conditionMemo;
+      if (record.stepCount != null) map[_recordStepCount] = record.stepCount;
+      if (record.healthKcal != null) map[_recordHealthKcal] = record.healthKcal;
       if (record.ringfitKcal != null) map[_recordRingfitKcal] = record.ringfitKcal;
       if (record.ringfitKm != null) map[_recordRingfitKm] = record.ringfitKm;
 
@@ -106,6 +112,15 @@ class _Firestore {
       return fieldVal;
     } else {
       return false;
+    }
+  }
+
+  int? _getInt(Map<String, dynamic>? map, String fieldName) {
+    dynamic fieldVal = map?[fieldName] ?? 0;
+    if (fieldVal is int) {
+      return fieldVal;
+    } else {
+      return null;
     }
   }
 
