@@ -95,7 +95,6 @@ class _HealthCareNotifier extends Notifier<HealthState> {
       if (dataPoint.type == HealthDataType.STEPS) {
         step += _getStepValue(dataPoint);
       } else if (dataPoint.type == HealthDataType.ACTIVE_ENERGY_BURNED) {
-        // TOOD これだと取得できない・・
         kcal += _getKcalValue(dataPoint);
       }
     }
