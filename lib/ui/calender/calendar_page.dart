@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_dyphic/common/app_logger.dart';
 import 'package:simple_dyphic/model/record.dart';
+import 'package:simple_dyphic/res/images.dart';
 
 import 'package:simple_dyphic/ui/calender/calendar_provider.dart';
 import 'package:simple_dyphic/ui/record/record_page.dart';
@@ -10,7 +11,7 @@ import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderPage extends ConsumerWidget {
-  const CalenderPage({Key? key}) : super(key: key);
+  const CalenderPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +60,7 @@ class _ViewBody extends StatelessWidget {
 }
 
 class _ViewCalendar extends ConsumerWidget {
-  const _ViewCalendar({Key? key}) : super(key: key);
+  const _ViewCalendar();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +107,7 @@ class _ViewCalendar extends ConsumerWidget {
 /// カレンダーの日付の下に表示するマーカーアイコンの処理
 ///
 class _ViewMarkers extends StatelessWidget {
-  const _ViewMarkers(this.records, {Key? key}) : super(key: key);
+  const _ViewMarkers(this.records);
 
   final List<Record> records;
   static const double _calendarIconSize = 15;
@@ -128,20 +129,22 @@ class _ViewMarkers extends StatelessWidget {
 
     final record = records.first;
 
-    if (record.condition != null) {
-      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
-    } else {
-      markers.add(const SizedBox(width: _calendarIconSize));
-    }
-
     if (record.isToilet) {
       markers.add(const SizedBox(width: _calendarIconSize, child: Text('💩')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
-    if (record.isExercise) {
-      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🏃‍♂️')));
+    if (record.condition != null) {
+      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
+    } else {
+      markers.add(const SizedBox(width: _calendarIconSize));
+    }
+
+    if (record.isRingfit()) {
+      markers.add(SizedBox(width: _calendarIconSize, child: Image.asset(Images.ringfitPath)));
+    } else if ((record.stepCount ?? 0) >= 7000) {
+      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🚶')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
@@ -153,7 +156,7 @@ class _ViewMarkers extends StatelessWidget {
 /// タップした日付の記録情報をカレンダーの下に表示する
 ///
 class _ViewSelectedDayInfoCard extends ConsumerWidget {
-  const _ViewSelectedDayInfoCard({Key? key}) : super(key: key);
+  const _ViewSelectedDayInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,7 +183,7 @@ class _ViewSelectedDayInfoCard extends ConsumerWidget {
 }
 
 class _ViewContentsOnInfoCard extends StatelessWidget {
-  const _ViewContentsOnInfoCard({Key? key}) : super(key: key);
+  const _ViewContentsOnInfoCard();
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +207,7 @@ class _ViewContentsOnInfoCard extends StatelessWidget {
 }
 
 class _ViewHeaderOnInfoCard extends ConsumerWidget {
-  const _ViewHeaderOnInfoCard({Key? key}) : super(key: key);
+  const _ViewHeaderOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,7 +219,7 @@ class _ViewHeaderOnInfoCard extends ConsumerWidget {
 }
 
 class _ViewDetailOnInfoCard extends ConsumerWidget {
-  const _ViewDetailOnInfoCard({Key? key}) : super(key: key);
+  const _ViewDetailOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -236,7 +239,7 @@ class _ViewDetailOnInfoCard extends ConsumerWidget {
 }
 
 class _ViewMemoOnInfoCard extends ConsumerWidget {
-  const _ViewMemoOnInfoCard({Key? key}) : super(key: key);
+  const _ViewMemoOnInfoCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

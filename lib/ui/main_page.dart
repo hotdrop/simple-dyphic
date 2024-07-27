@@ -3,7 +3,7 @@ import 'package:simple_dyphic/ui/calender/calendar_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
