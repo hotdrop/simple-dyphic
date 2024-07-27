@@ -235,7 +235,7 @@ class _ViewAuthorized extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStep = record.stepCount ?? 0;
-    final currentKcal = record.healthKcal ?? 0;
+    final currentKcal = record.healthKcal ?? 0.0;
     final step = (healthData.step > 0) ? healthData.step : currentStep;
     final kcal = (healthData.kcal > 0) ? healthData.kcal : currentKcal;
 

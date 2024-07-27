@@ -129,20 +129,22 @@ class _ViewMarkers extends StatelessWidget {
 
     final record = records.first;
 
-    if (record.condition != null) {
-      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
-    } else {
-      markers.add(const SizedBox(width: _calendarIconSize));
-    }
-
     if (record.isToilet) {
       markers.add(const SizedBox(width: _calendarIconSize, child: Text('💩')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
 
+    if (record.condition != null) {
+      markers.add(ConditionIcon.onCalendar(type: record.getConditionType()!, size: _calendarIconSize));
+    } else {
+      markers.add(const SizedBox(width: _calendarIconSize));
+    }
+
     if (record.isRingfit()) {
       markers.add(SizedBox(width: _calendarIconSize, child: Image.asset(Images.ringfitPath)));
+    } else if ((record.stepCount ?? 0) >= 7000) {
+      markers.add(const SizedBox(width: _calendarIconSize, child: Text('🚶')));
     } else {
       markers.add(const SizedBox(width: _calendarIconSize));
     }
