@@ -11,7 +11,7 @@ part 'record_provider.g.dart';
 class RecordController extends _$RecordController {
   @override
   Future<void> build(Record record) async {
-    await ref.read(recordMethodsProvider).fetchData(record.date);
+    await ref.read(healthCareProvider.notifier).onLoadHealthData(record.date);
   }
 }
 
@@ -71,20 +71,12 @@ class _RecordMethods {
         ));
   }
 
-  Future<void> onHealthAuthorized(DateTime date) async {
-    await ref.read(healthCareProvider.notifier).authorize();
-    await fetchData(date);
-  }
-
-  Future<void> fetchData(DateTime date) async {
-    final state = ref.read(healthCareProvider);
-    if (state is HealthAuthorized) {
-      final healthData = await ref.read(healthCareProvider.notifier).fetchData(date);
-      ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
-            stepCount: healthData.step,
-            healthKcal: healthData.kcal,
-          ));
-    }
+  void updateHealthData({required int stepCount, required double healthKcal, required bool isUpdate}) {
+    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(
+          stepCount: stepCount,
+          healthKcal: healthKcal,
+          isUpdate: isUpdate,
+        ));
   }
 
   void inputRingfitKcal(double? newVal) {
@@ -192,11 +184,5 @@ class _UiState {
     );
   }
 }
-
-final recordPageHealthDataProvider = Provider<HealthData>((ref) {
-  final step = ref.watch(_uiStateProvider.select((v) => v.stepCount)) ?? 0;
-  final kcal = ref.watch(_uiStateProvider.select((v) => v.healthKcal)) ?? 0;
-  return HealthData(step, kcal);
-});
 
 final isUpdateRecordProvider = Provider((ref) => ref.watch(_uiStateProvider.select((value) => value.isUpdate)));

@@ -40,7 +40,7 @@ class RecordPage extends ConsumerWidget {
           body: ref.watch(recordControllerProvider(record)).when(
                 data: (_) => _ViewBody(record),
                 error: (e, s) => Padding(padding: const EdgeInsets.all(16), child: Text('$e')),
-                loading: () => const CircularProgressIndicator(),
+                loading: () => const Center(child: CircularProgressIndicator()),
               ),
         ),
       ),
@@ -83,7 +83,7 @@ class _ViewBody extends StatelessWidget {
             const Divider(color: AppTheme.cardBackground, thickness: 2.0),
             const SizedBox(height: 16),
             _ViewMealArea(breakfast: record.breakfast, lunch: record.lunch, dinner: record.dinner),
-            _ViewHealthApp(record.date),
+            _ViewHealthApp(record),
             _ViewRingFitArea(ringfitKcal: record.ringfitKcal, ringfitKm: record.ringfitKm),
             const SizedBox(height: 16),
             _ViewCondition(record.getConditionType()),
@@ -157,9 +157,9 @@ class _ViewMealArea extends ConsumerWidget {
 }
 
 class _ViewHealthApp extends StatelessWidget {
-  const _ViewHealthApp(this.date);
+  const _ViewHealthApp(this.record);
 
-  final DateTime date;
+  final Record record;
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +172,7 @@ class _ViewHealthApp extends StatelessWidget {
           children: [
             const _HealthAppButton(),
             const SizedBox(width: 48),
-            _ViewOnLoadHealthData(date),
+            _ViewOnLoadHealthData(record),
           ],
         ),
       ),
@@ -197,18 +197,18 @@ class _HealthAppButton extends ConsumerWidget {
 }
 
 class _ViewOnLoadHealthData extends ConsumerWidget {
-  const _ViewOnLoadHealthData(this.date);
+  const _ViewOnLoadHealthData(this.record);
 
-  final DateTime date;
+  final Record record;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(healthCareProvider);
     return switch (state) {
       HealthUnavailable() => const _ViewNotAvailable('ヘルスケアアプリが利用できません'),
-      HealthAvailable() => _ViewAuthorized(date),
+      HealthAvailable() => const _ViewNotAvailable('このステータスにはならないはずです'),
       HealthAuthNotGrandted() => const _ViewNotAvailable('ヘルスケアアプリの利用権限がありません'),
-      HealthAuthorized() => const _ViewHealthData(),
+      HealthAuthorized() => _ViewAuthorized(record, state.healthData),
     };
   }
 }
@@ -227,29 +227,22 @@ class _ViewNotAvailable extends StatelessWidget {
 }
 
 class _ViewAuthorized extends ConsumerWidget {
-  const _ViewAuthorized(this.date);
+  const _ViewAuthorized(this.record, this.healthData);
 
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return OutlinedButton(
-      onPressed: () {
-        ref.read(recordMethodsProvider).onHealthAuthorized(date).catchError((e) {
-          AppDialog.ok(message: '$e').show(context);
-        });
-      },
-      child: const Text('歩数連携する'),
-    );
-  }
-}
-
-class _ViewHealthData extends ConsumerWidget {
-  const _ViewHealthData();
+  final Record record;
+  final HealthData healthData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(recordPageHealthDataProvider);
+    final currentStep = record.stepCount ?? 0;
+    final currentKcal = record.healthKcal ?? 0;
+    final step = (healthData.step > 0) ? healthData.step : currentStep;
+    final kcal = (healthData.kcal > 0) ? healthData.kcal : currentKcal;
+
+    Future<void>.delayed(Duration.zero).then((_) {
+      final isUpdate = healthData.step != currentStep || healthData.kcal != currentKcal;
+      ref.read(recordMethodsProvider).updateHealthData(stepCount: step, healthKcal: kcal, isUpdate: isUpdate);
+    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +253,7 @@ class _ViewHealthData extends ConsumerWidget {
             const VerticalColorLine(color: Colors.blue),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Text('${data.step} 歩', style: const TextStyle(fontSize: 24)),
+              child: Text('$step 歩', style: const TextStyle(fontSize: 24)),
             )
           ],
         ),
@@ -270,7 +263,7 @@ class _ViewHealthData extends ConsumerWidget {
             const VerticalColorLine(color: Colors.yellow),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Text('${data.kcal} kcal', style: const TextStyle(fontSize: 24)),
+              child: Text('$kcal kcal', style: const TextStyle(fontSize: 24)),
             )
           ],
         ),
