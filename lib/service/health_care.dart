@@ -99,7 +99,8 @@ class _HealthCareNotifier extends Notifier<HealthState> {
       }
     }
     AppLogger.d('取得した情報: 歩数=$step 消費カロリー=$kcal');
-    return HealthData(step, kcal);
+    final fixKcal = double.parse(kcal.toStringAsFixed(2));
+    return HealthData(step, fixKcal);
   }
 
   int _getStepValue(HealthDataPoint dp) {
@@ -119,8 +120,7 @@ class _HealthCareNotifier extends Notifier<HealthState> {
 
     final v = dp.value;
     if (v is NumericHealthValue) {
-      final kcal = v.numericValue.toDouble();
-      return double.parse(kcal.toStringAsFixed(2));
+      return v.numericValue.toDouble();
     } else {
       return 0;
     }
