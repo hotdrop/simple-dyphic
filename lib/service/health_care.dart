@@ -16,7 +16,7 @@ class _HealthCareNotifier extends Notifier<HealthState> {
 
   static const List<HealthDataType> _dataTypes = [
     HealthDataType.STEPS,
-    HealthDataType.ACTIVE_ENERGY_BURNED,
+    HealthDataType.TOTAL_CALORIES_BURNED,
   ];
 
   static const platform = MethodChannel('com.example.simple_dyphic.health/intents');
@@ -94,7 +94,7 @@ class _HealthCareNotifier extends Notifier<HealthState> {
     for (var dataPoint in datas) {
       if (dataPoint.type == HealthDataType.STEPS) {
         step += _getStepValue(dataPoint);
-      } else if (dataPoint.type == HealthDataType.ACTIVE_ENERGY_BURNED) {
+      } else if (dataPoint.type == HealthDataType.TOTAL_CALORIES_BURNED) {
         kcal += _getKcalValue(dataPoint);
       }
     }
@@ -112,9 +112,15 @@ class _HealthCareNotifier extends Notifier<HealthState> {
   }
 
   double _getKcalValue(HealthDataPoint dp) {
+    final now = DateTime.now();
+    if (dp.dateTo.isAfter(now)) {
+      return 0;
+    }
+
     final v = dp.value;
     if (v is NumericHealthValue) {
-      return v.numericValue.toDouble();
+      final kcal = v.numericValue.toDouble();
+      return double.parse(kcal.toStringAsFixed(2));
     } else {
       return 0;
     }
