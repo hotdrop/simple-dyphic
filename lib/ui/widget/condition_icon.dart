@@ -40,8 +40,6 @@ class ConditionIcon extends StatelessWidget {
           color: _selected ? Colors.blue : Colors.grey,
           size: _size,
         );
-      default:
-        throw UnimplementedError('ConditionIconにおかしなステータスが設定されています type=$_type');
     }
   }
 }

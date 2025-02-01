@@ -12,6 +12,5 @@ final initializerProvider = FutureProvider((ref) async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await ref.read(localDataSourceProvider).init();
-  await ref.read(localDataSourceProvider).migrateDataIfNecessary();
   await ref.read(healthCareProvider.notifier).onInitHealthStatus();
 });
