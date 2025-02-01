@@ -30,7 +30,7 @@ class RecordPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return PopScope(
       canPop: false, // 手動でpopする
-      onPopInvoked: (bool didPop) => _onPopInvoked(context, ref, didPop),
+      onPopInvokedWithResult: (didPop, result) => _onPopInvoked(context, ref, didPop),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
