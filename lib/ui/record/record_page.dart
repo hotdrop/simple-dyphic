@@ -188,6 +188,7 @@ class _HealthAppButton extends ConsumerWidget {
     return InkWell(
       onTap: () {
         ref.read(healthCareProvider.notifier).startApp().catchError((e) {
+          // ignore: use_build_context_synchronously
           AppDialog.ok(message: '$e').show(context);
         });
       },
@@ -379,20 +380,27 @@ class _ViewConditionMemo extends ConsumerWidget {
   }
 }
 
-class _ViewSaveButton extends ConsumerWidget {
+class _ViewSaveButton extends ConsumerStatefulWidget {
   const _ViewSaveButton(this.record);
 
   final Record record;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ViewSaveButton> createState() => _ViewSaveButtonState();
+}
+
+class _ViewSaveButtonState extends ConsumerState<_ViewSaveButton> {
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 48),
       child: ElevatedButton(
         onPressed: () {
-          ref.read(recordMethodsProvider).save(record).then((_) {
+          ref.read(recordMethodsProvider).save(widget.record).then((_) {
             ref.read(recordMethodsProvider).clear();
-            Navigator.pop(context, true);
+            if (context.mounted) {
+              Navigator.pop(context, true);
+            }
           });
         },
         child: const Padding(

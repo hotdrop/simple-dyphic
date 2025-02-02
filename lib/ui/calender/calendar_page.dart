@@ -6,7 +6,6 @@ import 'package:simple_dyphic/res/images.dart';
 
 import 'package:simple_dyphic/ui/calender/calendar_provider.dart';
 import 'package:simple_dyphic/ui/record/record_page.dart';
-import 'package:simple_dyphic/ui/widget/app_dialog.dart';
 import 'package:simple_dyphic/ui/widget/condition_icon.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -22,10 +21,11 @@ class CalenderPage extends ConsumerWidget {
       body: ref.watch(calendarControllerProvider).when(
             data: (_) => const _ViewBody(),
             error: (err, stackTrace) {
-              _processOnError(context, '$err');
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(
+                  child: Text(
+                '$err',
+                style: const TextStyle(color: Colors.red),
+              ));
             },
             loading: () {
               return const Center(
@@ -34,12 +34,6 @@ class CalenderPage extends ConsumerWidget {
             },
           ),
     );
-  }
-
-  void _processOnError(BuildContext context, String errMsg) {
-    Future<void>.delayed(Duration.zero).then((_) {
-      AppDialog.ok(message: errMsg).show(context);
-    });
   }
 }
 

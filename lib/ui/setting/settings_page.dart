@@ -18,9 +18,8 @@ class SettingsPage extends ConsumerWidget {
       body: ref.watch(settingsControllerProvider).when(
             data: (_) => const _ViewBody(),
             error: (err, stackTrace) {
-              _processOnError(context, '$err');
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Center(
+                child: Text('$err', style: const TextStyle(color: Colors.red)),
               );
             },
             loading: () {
@@ -30,12 +29,6 @@ class SettingsPage extends ConsumerWidget {
             },
           ),
     );
-  }
-
-  void _processOnError(BuildContext context, String errMsg) {
-    Future<void>.delayed(Duration.zero).then((_) {
-      AppDialog.ok(message: errMsg).show(context);
-    });
   }
 }
 

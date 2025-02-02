@@ -5,14 +5,21 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+rootProject.layout.buildDirectory.set(rootProject.file("../build"))
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(":app")
+    layout.buildDirectory.set(rootProject.layout.buildDirectory.dir(name))
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+    evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory.get().asFile
 }
