@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_dyphic/model/user_profile.dart';
+import 'package:simple_dyphic/repository/user_profile_repository.dart';
 
 part 'analysis_provider.g.dart';
 
@@ -10,7 +11,8 @@ class Analysis extends _$Analysis {
     return AnalysisState();
   }
 
-  Future<void> generateAdvice(UserProfile profile) async {
+  Future<void> generateAdvice() async {
+    final profile = await ref.read(userProfileRepository).find();
     if (profile.isEmpty()) {
       state = state.copyWith(error: 'プロフィール情報を入力してください');
       return;
@@ -32,22 +34,6 @@ class Analysis extends _$Analysis {
         error: '分析の生成に失敗しました: $e',
       );
     }
-  }
-}
-
-@riverpod
-class UserProfileController extends _$UserProfileController {
-  @override
-  UserProfile build() {
-    return UserProfile();
-  }
-
-  void updateAge(int? age) {
-    state = state.copyWith(age: age);
-  }
-
-  void updateHeight(double? height) {
-    state = state.copyWith(height: height);
   }
 }
 

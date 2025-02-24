@@ -1,20 +1,23 @@
 class UserProfile {
-  final int? age;
+  final DateTime? birthDate;
   final double? height;
+  final double? weight;
 
-  UserProfile({this.age, this.height});
+  UserProfile({this.birthDate, this.height, this.weight});
 
   bool isEmpty() {
-    return age == null || height == null;
+    return birthDate == null || height == null || weight == null;
   }
 
   UserProfile copyWith({
-    int? age,
+    DateTime? birthDate,
     double? height,
+    double? weight,
   }) {
     return UserProfile(
-      age: age ?? this.age,
+      birthDate: birthDate ?? this.birthDate,
       height: height ?? this.height,
+      weight: weight ?? this.weight,
     );
   }
 }
