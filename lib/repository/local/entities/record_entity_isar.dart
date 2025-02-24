@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
 
-part 'record_entitiy_isar.g.dart';
+part 'record_entity_isar.g.dart';
 
 @Collection()
-class RecordEntitiyIsar {
-  RecordEntitiyIsar({
+class RecordEntityIsar {
+  RecordEntityIsar({
     required this.id,
     this.breakfast,
     this.lunch,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_dyphic/model/user_profile.dart';
 import 'package:simple_dyphic/res/images.dart';
+import 'package:simple_dyphic/ui/setting/profile/user_profile_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_provider.dart';
 import 'package:simple_dyphic/ui/setting/widget/google_button.dart';
 import 'package:simple_dyphic/ui/setting/widget/app_progress_dialog.dart';
@@ -42,6 +44,7 @@ class _ViewBody extends ConsumerWidget {
     return Column(
       children: [
         const _RowAccountInfo(),
+        const _RowUserProfile(),
         const _RowAppLicense(),
         if (isSignIn) ...[
           const _RowBackup(),
@@ -87,6 +90,26 @@ class _RowAppLicense extends ConsumerWidget {
           applicationVersion: ref.read(settingAppVersionProvider),
           applicationIcon: Image.asset(Images.icAppPath, width: 50, height: 50),
         );
+      },
+    );
+  }
+}
+
+///
+/// ユーザー情報入力
+///
+class _RowUserProfile extends StatelessWidget {
+  const _RowUserProfile();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.person_add_alt_sharp, size: 32),
+      title: const Text('ユーザー情報'),
+      subtitle: const Text('ユーザー情報を登録します'),
+      trailing: const Icon(Icons.arrow_forward_ios),
+      onTap: () {
+        UserProfilePage.start(context);
       },
     );
   }

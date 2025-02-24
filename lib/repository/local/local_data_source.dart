@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart' as path;
-import 'package:simple_dyphic/repository/local/entities/record_entitiy_isar.dart';
+import 'package:simple_dyphic/repository/local/entities/record_entity_isar.dart';
+import 'package:simple_dyphic/repository/local/entities/user_profile_entity_isar.dart';
 
 final localDataSourceProvider = Provider((ref) => LocalDataSource(ref));
 
@@ -32,7 +33,7 @@ class LocalDataSource {
     const isarName = kReleaseMode ? 'release_db' : Isar.defaultName;
 
     _instance = await Isar.open(
-      [RecordEntitiyIsarSchema],
+      [RecordEntityIsarSchema, UserProfileEntityIsarSchema],
       directory: dirPath,
       name: isarName,
     );
