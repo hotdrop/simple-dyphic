@@ -10,28 +10,39 @@ class UserProfileController extends _$UserProfileController {
   @override
   Future<UserProfile> build() async {
     final profile = await ref.read(userProfileRepository).find();
+    // _uiStateProviderの初期化
+    ref.read(uiStateProvider.notifier).update((state) => _UiState(
+          birthDate: profile.birthDate ?? DateTime(1970),
+          height: profile.height,
+          weight: profile.weight,
+        ));
     return profile;
   }
 
   void inputBirthDate(DateTime newVal) {
-    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(birthDate: newVal));
+    ref.read(uiStateProvider.notifier).update((state) => state.copyWith(birthDate: newVal));
   }
 
   void inputHeight(double newVal) {
-    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(height: newVal));
+    ref.read(uiStateProvider.notifier).update((state) => state.copyWith(height: newVal));
   }
 
   void inputWeight(double newVal) {
-    ref.read(_uiStateProvider.notifier).update((state) => state.copyWith(weight: newVal));
+    ref.read(uiStateProvider.notifier).update((state) => state.copyWith(weight: newVal));
   }
 
-  Future<void> save(UserProfile currentProfile) async {
-    final newProfile = ref.read(_uiStateProvider).toUserProfile(currentProfile);
+  Future<void> save() async {
+    final newProfile = ref.read(uiStateProvider).toUserProfile();
     await ref.read(userProfileRepository).save(newProfile);
   }
 }
 
-final _uiStateProvider = StateProvider<_UiState>((_) => _UiState());
+final uiStateProvider = StateProvider<_UiState>((_) => _UiState());
+
+final enableSaveProvider = StateProvider((ref) {
+  final i = ref.watch(uiStateProvider);
+  return i.birthDate != null && i.height != null && i.weight != null;
+});
 
 ///
 /// 入力保持用のクラス
@@ -59,11 +70,11 @@ class _UiState {
     );
   }
 
-  UserProfile toUserProfile(UserProfile currentProfile) {
+  UserProfile toUserProfile() {
     return UserProfile(
-      birthDate: birthDate ?? currentProfile.birthDate,
-      height: height ?? currentProfile.height,
-      weight: weight ?? currentProfile.weight,
+      birthDate: birthDate,
+      height: height,
+      weight: weight,
     );
   }
 }

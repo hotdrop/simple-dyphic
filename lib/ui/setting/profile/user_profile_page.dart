@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/model/user_profile.dart';
 import 'package:simple_dyphic/ui/setting/profile/user_profile_provider.dart';
 
 class UserProfilePage extends ConsumerWidget {
-  const UserProfilePage({super.key});
+  const UserProfilePage._();
+
+  static Future<bool> start(BuildContext context) async {
+    return await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(builder: (_) => const UserProfilePage._()),
+        ) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -13,7 +20,7 @@ class UserProfilePage extends ConsumerWidget {
         title: const Text('ユーザー情報'),
       ),
       body: ref.watch(userProfileControllerProvider).when(
-            data: (data) => _ViewBody(data),
+            data: (_) => const _ViewBody(),
             error: (err, stackTrace) {
               return Center(
                 child: Text('$err', style: const TextStyle(color: Colors.red)),
@@ -30,25 +37,22 @@ class UserProfilePage extends ConsumerWidget {
 }
 
 class _ViewBody extends StatelessWidget {
-  const _ViewBody(this.profile);
-
-  final UserProfile profile;
+  const _ViewBody();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        _UserProfileCard(profile),
-        // TODO 保存ボタンとクローズ処理
+        _UserProfileCard(),
+        SizedBox(height: 16),
+        _SaveButton(),
       ],
     );
   }
 }
 
 class _UserProfileCard extends ConsumerWidget {
-  const _UserProfileCard(this.profile);
-
-  final UserProfile profile;
+  const _UserProfileCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,12 +63,33 @@ class _UserProfileCard extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('プロフィール情報', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            // TODO 生年月日の入力を実装する必要がある
             const SizedBox(height: 16),
+            // TODO 身長と体重もLeadingにアイコンを入れて左側を揃えたい
+            ListTile(
+              title: const Text('生年月日'),
+              subtitle: Text(
+                ref.watch(uiStateProvider).birthDate?.toString().split(' ')[0] ?? '未設定',
+              ),
+              onTap: () async {
+                final selected = await showDatePicker(
+                  context: context,
+                  initialDate: ref.read(uiStateProvider).birthDate ?? DateTime(1970),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                );
+                if (selected != null) {
+                  ref.read(userProfileControllerProvider.notifier).inputBirthDate(selected);
+                }
+              },
+            ),
+            const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: '身長 (cm)'),
-              keyboardType: TextInputType.number,
-              initialValue: profile.height?.toString(),
+              decoration: const InputDecoration(
+                labelText: '身長 (cm)',
+                hintText: '小数点第一位まで入力可能',
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: ref.read(uiStateProvider).height?.toStringAsFixed(1),
               onChanged: (value) {
                 final newVal = double.tryParse(value);
                 if (newVal != null) {
@@ -74,9 +99,12 @@ class _UserProfileCard extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: '体重'),
-              keyboardType: TextInputType.number,
-              initialValue: profile.weight?.toString(),
+              decoration: const InputDecoration(
+                labelText: '体重 (kg)',
+                hintText: '小数点第一位まで入力可能',
+              ),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              initialValue: ref.read(uiStateProvider).weight?.toStringAsFixed(1),
               onChanged: (value) {
                 final newVal = double.tryParse(value);
                 if (newVal != null) {
@@ -85,6 +113,33 @@ class _UserProfileCard extends ConsumerWidget {
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SaveButton extends ConsumerWidget {
+  const _SaveButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final canSave = ref.watch(enableSaveProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: canSave
+              ? () async {
+                  await ref.read(userProfileControllerProvider.notifier).save();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                }
+              : null,
+          child: const Text('保存'),
         ),
       ),
     );
