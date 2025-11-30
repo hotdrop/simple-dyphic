@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_dyphic/ui/analysis/analysis_page.dart';
 import 'package:simple_dyphic/ui/calender/calendar_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_page.dart';
 
@@ -43,8 +42,6 @@ class _MainPageState extends State<MainPage> {
     switch (index) {
       case 0:
         return const CalenderPage();
-      case 1:
-        return const AnalysisPage();
       default:
         return const SettingsPage();
     }
@@ -53,7 +50,6 @@ class _MainPageState extends State<MainPage> {
 
 final _allDestinations = <Destination>[
   const Destination('カレンダー', Icons.calendar_today),
-  const Destination('分析', Icons.analytics),
   const Destination('設定', Icons.settings),
 ];
 

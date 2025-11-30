@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_dyphic/model/user_profile.dart';
 import 'package:simple_dyphic/res/images.dart';
 import 'package:simple_dyphic/ui/setting/profile/user_profile_page.dart';
 import 'package:simple_dyphic/ui/setting/settings_provider.dart';
