@@ -10,7 +10,7 @@ final healthCareProvider = NotifierProvider<_HealthCareNotifier, HealthState>(_H
 class _HealthCareNotifier extends Notifier<HealthState> {
   @override
   HealthState build() {
-    Health().configure(useHealthConnectIfAvailable: true);
+    Health().configure();
     return HealthUnavailable();
   }
 
