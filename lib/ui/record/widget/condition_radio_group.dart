@@ -27,9 +27,20 @@ class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: ConditionType.values.map((type) => _typeRadio(context, type)).toList(),
+    return RadioGroup<ConditionType>(
+      groupValue: _selectType,
+      onChanged: (ConditionType? newVal) {
+        if (newVal != null) {
+          setState(() {
+            _selectType = newVal;
+          });
+          widget.onSelected(newVal);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: ConditionType.values.map((type) => _typeRadio(context, type)).toList(),
+      ),
     );
   }
 
@@ -39,15 +50,6 @@ class _ConditionRadioGroupState extends State<ConditionRadioGroup> {
         ConditionIcon.onRadioGroup(type: type, size: 50, selected: type == _selectType),
         Radio<ConditionType>(
           value: type,
-          groupValue: _selectType,
-          onChanged: (ConditionType? newVal) {
-            if (newVal != null) {
-              setState(() {
-                _selectType = newVal;
-              });
-              widget.onSelected(newVal);
-            }
-          },
         )
       ],
     );
